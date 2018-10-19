@@ -1,0 +1,6 @@
+dev:
+	@echo "run server"
+	python3 manage.py runserver
+test:
+	@echo "test"
+	python3 test.py
