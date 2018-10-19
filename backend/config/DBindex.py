@@ -3,7 +3,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import create_engine
 import config
 
-# engine = create_engine("mysql+pymysql://precoo:Nasa2018@104.196.179.255/project",echo=True)
+
 engine = create_engine(config.db, echo=True)
 
 db_session = scoped_session(sessionmaker(autocommit=False,
