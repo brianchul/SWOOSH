@@ -1,0 +1,1 @@
+db = "mysql+pymysql://root:ASd552361802@localhost:3306/testing_db"
