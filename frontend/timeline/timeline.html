@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="en" >
+  <head>
+      <meta charset="UTF-8">
+  <title>Timeline</title>
+  
+  
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Droid+Sans'>
+
+      <link rel="stylesheet" href="css/style.css">
+    <style>
+      /* Set the size of the div element that contains the map */
+      #map {
+        height: 700px;  /* The height is 400 pixels */
+        left: 5%;
+        width: 90%;  /* The width is the width of the web page */
+       }
+    </style>
+  </head>
+
+  <body>
+    <!--The div element for the map -->
+    <div id="map"></div>
+    <script>
+// Initialize and add the map
+        var map;
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: 45.920278, lng: 63.342222 },
+        zoom: 2
+      });
+      var data = [
+        {
+          position : { lat: 45.920278, lng: 63.342222 },
+          map:map,
+          title:'蘇聯',
+          icon:{
+          url: 'location.png',
+          scaledSize: new google.maps.Size(30, 40)
+          }
+      },
+      {
+          position : { lat: 28.2639, lng: -80.3417 },
+          map:map,
+          title:'美國',
+          icon:{
+          url: 'location.png',
+          scaledSize: new google.maps.Size(30, 40)
+          }
+      }
+      ];
+      for (var i= 0; data.length >i ; i++) {
+        var marker = new google.maps.Marker(data[i]);
+      }
+    }
+        
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2d_ddVsXXWjABx4UhTZmlMWg_Cqcc6QU&callback=initMap">
+    </script>
+      
+      <div class="entries">
+  <div class="entry">
+    <div class="title">2011</div>
+    <div class="body">
+      <p>Neque sunt voluptatibus repellat pariatur ut enim. Eveniet rerum suscipit eveniet amet dignissimos. Doloremque et distinctio quod molestiae ut.</p>
+    </div>
+  </div>
+  <div class="entry">
+    <div class="title">2012</div>
+    <div class="body">
+      <p>Quo nobis cumque dolor iure voluptatem voluptatem alias soluta.</p>
+    </div>
+  </div>
+  <div class="entry">
+    <div class="title big">2013</div>
+    <div class="body">
+      <p>Rerum sit libero possimus amet excepturi. Exercitationem enim dolores sunt praesentium dolorum praesentium.</p>
+    </div>
+  </div>
+  <div class="entry">
+    <div class="title">2014</div>
+    <div class="body">
+      <p>Voluptatibus veniam ea reprehenderit atque. Reiciendis non laborum adipisci ipsa pariatur omnis. Sed ipsam repudiandae velit. Omnis libero nostrum aperiam nemo dolor ea eos eius. Esse a non itaque quidem.</p>
+    </div>
+  </div>
+  <div class="entry">
+    <div class="title">2015</div>
+    <div class="body">
+      <p>VAdipisci totam omnis cum et suscipit excepturi et excepturi. Inventore sequi sit ut aliquid. Modi aut dolores dignissimos.</p>
+      <p>Delectus facere officia consequuntur molestias deserunt illo. Placeat laudantium beatae natus excepturi ab nihil voluptates.</p>
+    </div>
+  </div>
+  <div class="entry">
+    <div class="title big">2016</div>
+    <div class="body">
+      <p>Impedit dolorem commodi explicabo fugit aut alias voluptatem. Magnam earum rerum quae dicta quibusdam aliquam ut.</p>
+    </div>
+  </div>
+  <div class="entry">
+    <div class="title">2017</div>
+    <div class="body">
+      <p>Qui facere eos aut suscipit doloremque quos...</p>
+    </div>
+  </div>
+</div>
+  <script src='js/timeline.js'></script>
+  </body>
+</html>
