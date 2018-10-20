@@ -22,38 +22,137 @@
     <!--The div element for the map -->
     <div id="map"></div>
     <script>
-// Initialize and add the map
+        // Initialize and add the map
         var map;
-    function initMap() {
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 45.920278, lng: 63.342222 },
-        zoom: 2
-      });
-      var data = [
-        {
-          position : { lat: 45.920278, lng: 63.342222 },
-          map:map,
-          title:'蘇聯',
-          icon:{
-          url: 'location.png',
-          scaledSize: new google.maps.Size(30, 40)
-          }
-      },
-      {
-          position : { lat: 28.2639, lng: -80.3417 },
-          map:map,
-          title:'美國',
-          icon:{
-          url: 'location.png',
-          scaledSize: new google.maps.Size(30, 40)
-          }
-      }
-      ];
-      for (var i= 0; data.length >i ; i++) {
-        var marker = new google.maps.Marker(data[i]);
-      }
-    }
-        
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 45.920278, lng: 63.342222 },
+                zoom: 2
+            });
+            var data = [
+                {
+                    position: { lat: 45.920278, lng: 63.342222 },
+                    map: map,
+                    title: '國家：蘇聯\n發射時間：1957年10月4日 19時28分34秒\n衛星名稱：史普尼克1號\n發射地點：蘇聯哈薩克斯坦丘拉坦-拜科努爾航天發射場一號發射場區\n重量：83.6kg\n備註：研究地球電離層、測量外太空大氣層空氣密度',
+                    icon: {
+                        url: 'location.png',
+                        scaledSize: new google.maps.Size(30, 40)
+                    }
+                },
+                {
+                    position: { lat: 28.2639, lng: -80.3417 },
+                    map: map,
+                    title: '國家：美國\n發射時間：1958年2月1日 03時47分56秒\n衛星名稱：探險者一號\n發射地點：美國佛羅里達州布里瓦德縣卡納維拉爾角-卡納維拉爾角空軍基地第26號發射工位A發射台\n重量：13.7kg\n備註：測量宇宙射線、地球范艾倫輻射帶、微流星體以及衛星本體溫度',
+                    icon: {
+                        url: 'location.png',
+                        scaledSize: new google.maps.Size(30, 40)
+                    }
+                },
+                {
+                    position: { lat: 30.4642, lng: -3.0314 },
+                    map: map,
+                    title: '國家：法國\n發射時間：1965年11月26日 14時47分21秒\n衛星名稱：阿斯泰利克斯\n發射地點：阿爾及利亞貝沙爾省漢馬吉爾-特種火箭聯合測試中心B2發射場布麗吉特發射工位\n重量：42kg\n備註：鑽石號A型運載火箭性能試驗',
+                    icon: {
+                        url: 'location.png',
+                        scaledSize: new google.maps.Size(30, 40)
+                    }
+                },
+                {
+                    position: { lat: 31.2523, lng: 131.0785 },
+                    map: map,
+                    title: '國家：日本\n發射時間：1970年2月11日 04時25分\n衛星名稱：大隅號\n發射地點：日本鹿兒島縣肝付町-內之浦宇宙空間觀測所拉姆達發射台\n重量：23.8kg\n備註：試驗運載火箭子級級間分離與火箭第4級入軌性能，衛星在軌運行10多小時',
+                    icon: {
+                        url: 'location.png',
+                        scaledSize: new google.maps.Size(30, 40)
+                    }
+                },
+                {
+                    position: { lat: 41.306140, lng: 100.313220 },
+                    map: map,
+                    title: '國家：中國\n發射時間：1970年4月24日 21時35分45秒\n衛星名稱：東方紅一號\n發射地點：中國甘肅省酒泉市額濟納旗-酒泉衛星發射中心二號發射陣地5020工位\n重量：173kg\n備註：之前各國首發衛星當中最重的一顆，探測外太空空間環境，測量衛星工程參數，軌道測控，播放《東方紅》',
+                    icon: {
+                        url: 'location.png',
+                        scaledSize: new google.maps.Size(30, 40)
+                    }
+                },
+                {
+                    position: { lat: -30.9500, lng: 136.4595 },
+                    map: map,
+                    title: '國家：英國\n發射時間：1971年10月28日 04時09分29秒\n衛星名稱：普羅斯帕羅\n發射地點：澳大利亞南澳大利亞州伍默拉軍事禁區-伍默拉試驗場五號發射場區B發射台\n重量：66kg\n備註：試驗輕型太陽能電池帆板、熱控以及電子設計，測量宇宙塵埃',
+                    icon: {
+                        url: 'location.png',
+                        scaledSize: new google.maps.Size(30, 40)
+                    }
+                },
+                {
+                    position: { lat: 13.733, lng: 80.235 },
+                    map: map,
+                    title: '國家：印度\n發射時間：1980年7月18日 02時33分45秒\n衛星名稱：羅希尼1B號\n發射地點：印度安得拉邦內洛爾縣斯里赫里戈達島-薩迪什·達萬航天中心一號發射台\n重量：40kg\n備註：衛星運載火箭性能試驗，評估衛星性能，檢驗地面測控系統',
+                    icon: {
+                        url: 'location.png',
+                        scaledSize: new google.maps.Size(30, 40)
+                    }
+                },
+                {
+                    position: { lat: 31.5304, lng: 34.4049 },
+                    map: map,
+                    title: '國家：以色列\n發射時間：1988年9月19日 09時34分\n衛星名稱：地平線1號\n發射地點：以色列中央區帕勒馬希姆-帕勒馬希姆空軍基地\n重量：157kg\n備註：測量外太空大氣層、磁場以及地球引力，進行外空間技術試驗',
+                    icon: {
+                        url: 'location.png',
+                        scaledSize: new google.maps.Size(30, 40)
+                    }
+                },
+                {
+                    position: { lat: 62.5423, lng: 40.4712 },
+                    map: map,
+                    title: '國家：烏克蘭\n發射時間：1991年9月28日 07時05分\n衛星名稱：六顆俄羅斯制天箭三號衛星\n發射地點：俄羅斯阿爾漢格爾斯克州米爾內-普列謝茨克航天發射場32號發射場區\n重量：6×220kg\n備註：軍用通訊衛星，蘇聯時期研製的運載火箭，火箭製造廠位於獨立後的烏克蘭境內，在俄羅斯境內發射升空',
+                    icon: {
+                        url: 'location.png',
+                        scaledSize: new google.maps.Size(30, 40)
+                    }
+                },
+                {
+                    position: { lat: 62.5512, lng: 40.281 },
+                    map: map,
+                    title: '國家：俄羅斯\n發射時間：1992年1月21日 15時00分00秒\n衛星名稱：宇宙2175號\n發射地點：俄羅斯阿爾漢格爾斯克州米爾內-普列謝茨克航天發射場43號發射場區\n重量：6600kg\n備註：軍用偵測衛星',
+                    icon: {
+                        url: 'location.png',
+                        scaledSize: new google.maps.Size(30, 40)
+                    }
+                },
+                {
+                    position: { lat: 35.145, lng: 53.5515 },
+                    map: map,
+                    title: '國家：伊朗\n發射時間：2009年2月2日 18時34分\n衛星名稱：希望號衛星\n發射地點：伊朗塞姆南省塞姆南市-塞姆南發射場\n重量：27kg\n備註：通訊衛星',
+                    icon: {
+                        url: 'location.png',
+                        scaledSize: new google.maps.Size(30, 40)
+                    }
+                },
+                {
+                    position: { lat: 39.393627, lng: 124.421906 },
+                    map: map,
+                    title: '國家：北韓\n發射時間：2012年12月12日 00時49分46秒\n衛星名稱：光明星3號 (2期)\n發射地點：朝鮮平安北道鐵山郡東昌里-西海衛星發射場\n重量：100kg\n備註：通訊衛星，廣播金日成、金正日將軍歌曲',
+                    icon: {
+                        url: 'location.png',
+                        scaledSize: new google.maps.Size(30, 40)
+                    }
+                },
+                {
+                    position: { lat: 34.2554, lng: 127.32625 },
+                    map: map,
+                    title: '國家：韓國\n發射時間：2013年1月30日 07時00分00秒\n衛星名稱：科學技術衛星2C號\n發射地點：韓國全羅南道高興郡-羅老宇宙中心\n重量：100kg\n備註： 科學與工程技術試驗載荷，火箭一級由俄羅斯製造，二級、整流罩、載荷、發射場地等由韓國承擔',
+                    icon: {
+                        url: 'location.png',
+                        scaledSize: new google.maps.Size(30, 40)
+                    }
+                }
+            ];
+            for (var i = 0; data.length > i; i++) {
+                var marker = new google.maps.Marker(data[i]);
+            }
+        }
+
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2d_ddVsXXWjABx4UhTZmlMWg_Cqcc6QU&callback=initMap">
