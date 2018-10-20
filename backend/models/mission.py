@@ -6,7 +6,7 @@ from models import location, rocket, client
 class Missions(Base):
     __tablename__ = "mission"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    # join_condition = Column(String(200))
+    price_condition = Column(String(2000))
     # join_start = Column(DateTime)
     # join_deadline = Column(DateTime)
     launch_date = Column(DateTime)
@@ -17,6 +17,7 @@ class Missions(Base):
     target_height_km = Column(Float(2))
     create_by = Column(Integer, ForeignKey("client.id"))
     create_time = Column(DateTime)
+    
 
 
 '''    詢問Q： 可以共乘 合資的條件(高度軌道需求相同)
