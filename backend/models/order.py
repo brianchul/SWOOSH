@@ -10,10 +10,11 @@ class ClientOrders(Base):
     weight_kg = Column(Integer)
     purpose = Column(String(500))
     request_by = Column(Integer, ForeignKey("client.id"))
-    eta_height_km = Column(Float(2))
+    eta_height_km = Column(String(100))
     arrival_date = Column(DateTime)
     inclination = Column(String(50))
     create_time = Column(DateTime)
+    budget_billion = Column(String(100))
 
 
 class MissionOrders(Base):
