@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="jquery.flipcountdown.js"></script>
+<link rel="stylesheet" type="text/css" href="jquery.flipcountdown.css" />
+<script>
+$(function(){
+	var i = 1000;
+	$('#retroclockbox1').flipcountdown();
+})
+</script>
+</head>
+<body>
+<div align="center">
+			<td colspan="4"><span id="new_year"></span></td>
+	<script>
+	$(function(){
+		var NY = Math.round((new Date('10/26/2018 16:00:00')).getTime()/1000);
+		$('#new_year').flipcountdown({
+			tick:function(){
+				var nol = function(h){
+					return h>9?h:'0'+h;
+				}
+				var	range  	= NY-Math.round((new Date()).getTime()/1000),
+					secday = 86400, sechour = 3600,
+					days 	= parseInt(range/secday),
+					hours	= parseInt((range%secday)/sechour),
+					min		= parseInt(((range%secday)%sechour)/60),
+					sec		= ((range%secday)%sechour)%60;
+				return nol(days)+' '+nol(hours)+' '+nol(min)+' '+nol(sec);
+			}
+		});
+	});
+	</script>
+</div>
+
+</body>
+</html>
