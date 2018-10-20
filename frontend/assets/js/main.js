@@ -1,16 +1,3 @@
-/*
-	Dimension by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
-//const request = require('request'); // 載入request模組
-
-//request({
-//    url: 'http://104.196.179.255:5000/rocket/',
-//    json: true
-//}, (error, response, body) => {
-//    console.log(JSON.stringify(body, undefined, 2)); // body是回傳的json物件，使用JSON.stringify()轉為json字串
-//    });
 
 (function($) {
 
