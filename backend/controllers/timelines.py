@@ -18,6 +18,22 @@ def FindAll():
         return None, 404
 
 
+def FindAllWithCond(cond):
+    try:
+        query = Timelines.query.filter(Timelines.launch_day >= cond['start'])
+        if 'end' in cond:
+            query = query.filter(Timelines.launch_day <= cond['end'])
+        query = query.all()
+        dataDict = []
+        for data in query:
+            data.__dict__.pop("_sa_instance_state")
+            dataDict.append(data.__dict__)
+        return dataDict, 200
+    except Exception as e:
+        log().error(e.message)
+        return None, 404
+
+
 def FindOne(cond):
     try:
         query = Timelines.query.filter_by(**cond)

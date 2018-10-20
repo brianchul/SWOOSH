@@ -18,7 +18,10 @@ def getAllTimelines():
 @timeline.route("/", methods=['POST'])
 def getOneTimelines():
     r = request.get_json()
-    resp, code = timelines.FindOne(r)
+    if 'start' in r:
+        resp, code = timelines.FindAllWithCond(r)
+    else:
+        resp, code = timelines.FindOne(r)
     if resp is not None:
         return warpResponse(resp)
     else:
