@@ -1,8 +1,8 @@
 <template>
   <div class='homepageRoot center'>
     <div class='contentWrapper center'>
-      <transition name='contentTransition' @after-leave='openBoard = true'>
-        <div v-if='windowView' class='content'>
+      <transition name='contentTransition' @after-leave='boardView = true'>
+        <div v-show='windowView' class='content'>
           <div class='title center'>Super Rocket</div>
           <div class='intro center'>
             IF YOU DON'T HAVE ENOUGH MONEY TO LAUNCH THE SATELLITE.
@@ -13,15 +13,19 @@
       </transition>
       <div class='menuWrapper center'>
         <div class='menu center'>
-          <div v-for='(item,index) in menuItems' :key='index' @click='onClick'
+          <div v-for='(item,index) in menuItems' :key='index' @click='closeWindow(index,item.component)'
+          :id='(windowView)? "" : (selectedMenuIndex === index)? "selectedMenu" : ""'
           :class='(windowView)? (index === 0)? "leftMenu" : (index === 4 )? "rightMenu" : "" : ""'>
-            {{ item }}
+            {{ item.text }}
           </div>
         </div>
-        <transition name='boardTransition' @after-enter='afterOpen = true'>
-          <div v-if='openBoard' class='board center'
-          :class='(afterOpen) ? "boardAfter" : ""'>
+        <transition name='boardTransition' @after-enter='boardHeightHandler = true' @before-leave='boardHeightHandler = false'>
+          <div v-show='boardView' class='board center'
+          :class='(boardHeightHandler) ? "boardAfter" : ""'>
             <div class='close' @click='closeBoard'></div>
+            <div class='componentWrapper'>
+              <component :is='contentRoot'></component>
+            </div>
           </div>
         </transition>
       </div>
@@ -30,32 +34,52 @@
 </template>
 
 <script>
+import AboutUs from './AboutUs.vue'
+import History from './History.vue'
+import Application from './Application.vue'
+import CaseList from './CaseList.vue'
+import Order from './Order.vue'
+
 export default {
   name: 'Homepage',
+  components: {
+    AboutUs,
+    History,
+    Application,
+    CaseList,
+    Order,
+  },
   props: {
     windowView: Boolean,
   },
   data() {
     return {
       menuItems: [
-        'ABOUT US',
-        'HISTORY',
-        'APPLICATION',
-        'CASE LIST',
-        'COMPANY',
+        {text:'ABOUT US', component:'AboutUs'},
+        {text:'HISTORY', component:'History'},
+        {text:'APPLICATION', component:'Application'},
+        {text:'CASE LIST', component:'CaseList'},
+        {text:'ORDER', component:'Order'},
       ],
-      openBoard: false,
-      afterOpen: false,
+      selectedMenuIndex: 0,
+      contentRoot: 'AboutUs',
+      boardView: false,
+      boardHeightHandler: false,
     }
   },
   methods: {
-    onClick: function() {
+    closeWindow: function(index,component) {
       this.$emit('closeWindow');
+      this.selectedMenuIndex = index;
+      this.contentRoot = component;
+      this.boardView = false;
+      setTimeout(() => this.boardView = true,800);
     },
     closeBoard: function() {
-      this.openBoard = false;
+      this.boardView = false;
+      this.$emit('openWindow');
     },
-  }
+  },
 }
 </script>
 
@@ -103,6 +127,10 @@ export default {
 .menu div:hover {
   background-color: rgba(255, 255, 255, 0.3);
 }
+#selectedMenu {
+  background-color: rgba(255, 255, 255, 1);
+  color: #000;
+}
 .leftMenu {
   padding-left: 100px;
 }
@@ -127,22 +155,23 @@ export default {
   height: calc(70vh - 100px);
 }
 .boardTransition-enter-active, .boardTransition-leave-active {
-  transition: all 2s;
+  transition: all .8s;
 }
 .boardTransition-enter, .boardTransition-leave-to, .boardBefore {
   height: 0px;
-  opacity: 0;
+  margin-bottom: 0px;
 }
 .boardTransition-enter-to, .boardTransition-leave, .boardAfter {
-  height: 60vh;
-  opacity: 1;
+  height: 80vh;
+  margin-bottom: 30px;
 }
 .board {
   position: relative;
   width: 90%;
-  background-color: rgba(227,239,244,0.7);
+  border: 2px solid #fff;
   border-radius: 20px;
-  margin-bottom: 30px;
+  background-color: rgba(227,239,244,0.3);
+  overflow: hidden;
 }
 .close {
   position: absolute;
@@ -161,12 +190,18 @@ export default {
   content: ' ';
   height: 33px;
   width: 2px;
-  background-color: #333;
+  background-color: #fff;
 }
 .close:before {
   transform: rotate(45deg);
 }
 .close:after {
   transform: rotate(-45deg);
+}
+.componentWrapper {
+  width: 85%;
+  height: 85%;
+  border: 1px solid #000;
+  color: #000;
 }
 </style>

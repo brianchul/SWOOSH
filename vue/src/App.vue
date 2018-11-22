@@ -1,7 +1,7 @@
 <template>
   <div id='app center'>
     <div class='bg'></div>
-    <Homepage @openWindow='windowView = true' @closeWindow='windowView = !windowView' :windowView='windowView'/>
+    <Homepage @openWindow='windowView = true' @closeWindow='windowView = false' :windowView='windowView'/>
     <transition name='windowTransition'>
       <div v-if='windowView' class='window'></div>
     </transition>
@@ -27,7 +27,7 @@ export default {
 <style>
 body {
   margin: 0px;
-      font-family: Colfax,sans-serif;
+  font-family: Colfax,sans-serif;
 }
 .bg {
   position: absolute;
