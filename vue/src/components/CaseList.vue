@@ -1,12 +1,12 @@
 <template>
     <div>
-        Application
+        CaseList
     </div>
 </template>
 
 <script>
 export default {
-    name: 'Application',
+    name: 'CaseList',
 }
 </script>
 
