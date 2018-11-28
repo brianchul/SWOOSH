@@ -1,8 +1,8 @@
 <template>
   <div class='homepageRoot center'>
     <div class='contentWrapper center'>
-      <transition name='contentTransition' @after-leave='openBoard = true'>
-        <div v-if='windowView' class='content'>
+      <transition name='contentTransition' @after-leave='boardView = true'>
+        <div v-show='windowView' class='content'>
           <div class='title center'>Super Rocket</div>
           <div class='intro center'>
             IF YOU DON'T HAVE ENOUGH MONEY TO LAUNCH THE SATELLITE.
@@ -13,16 +13,30 @@
       </transition>
       <div class='menuWrapper center'>
         <div class='menu center'>
-          <div v-for='(item,index) in menuItems' :key='index' @click='onClick'
+          <div v-for='(item,index) in menuItems' :key='index' @click='closeWindow(index)'
+          :id='(windowView)? "" : (selectedMenuIndex === index)? "selectedMenu" : ""'
           :class='(windowView)? (index === 0)? "leftMenu" : (index === 4 )? "rightMenu" : "" : ""'>
-            {{ item }}
+            {{ item.text }}
           </div>
         </div>
+<<<<<<< HEAD
         <transition name='boardTransition' @after-enter='afterOpen = true'>
           <div v-if='openBoard' class='board center'
           :class='(afterOpen) ? "boardAfter" : ""'>
             <div class='close' @click='closeBoard'></div> 
             <div class = 'test' >Hello World</div>
+=======
+        <transition name='boardTransition'
+        @before-enter='contentRoot = menuItems[selectedMenuIndex].component'
+        @after-enter='boardHeightHandler = true'
+        @before-leave='boardHeightHandler = false'>
+          <div v-show='boardView' class='board center'
+          :class='(boardHeightHandler) ? "boardAfter" : ""'>
+            <div class='close' @click='closeBoard'></div>
+            <div class='componentWrapper'>
+              <component :is='contentRoot'></component>
+            </div>
+>>>>>>> 17f40f161eb53706f4b51cdbd64e55279e1c5553
           </div>
         </transition>
       </div>
@@ -31,32 +45,51 @@
 </template>
 
 <script>
+import AboutUs from './AboutUs.vue'
+import History from './History.vue'
+import Application from './Application.vue'
+import CaseList from './CaseList.vue'
+import Order from './Order.vue'
+
 export default {
   name: 'Homepage',
+  components: {
+    AboutUs,
+    History,
+    Application,
+    CaseList,
+    Order,
+  },
   props: {
     windowView: Boolean,
   },
   data() {
     return {
       menuItems: [
-        'ABOUT US',
-        'HISTORY',
-        'APPLICATION',
-        'CASE LIST',
-        'COMPANY',
+        {text:'ABOUT US', component:'AboutUs'},
+        {text:'HISTORY', component:'History'},
+        {text:'APPLICATION', component:'Application'},
+        {text:'CASE LIST', component:'CaseList'},
+        {text:'ORDER', component:'Order'},
       ],
-      openBoard: false,
-      afterOpen: false,
+      selectedMenuIndex: 0,
+      contentRoot: 'AboutUs',
+      boardView: false,
+      boardHeightHandler: false,
     }
   },
   methods: {
-    onClick: function() {
+    closeWindow: function(index) {
       this.$emit('closeWindow');
+      this.selectedMenuIndex = index;
+      this.boardView = false;
+      setTimeout(() => this.boardView = true,850);
     },
     closeBoard: function() {
-      this.openBoard = false;
+      this.boardView = false;
+      this.$emit('openWindow');
     },
-  }
+  },
 }
 </script>
 
@@ -104,17 +137,21 @@ export default {
 .menu div:hover {
   background-color: rgba(255, 255, 255, 0.3);
 }
+#selectedMenu {
+  background-color: rgba(255, 255, 255, 1);
+  color: #000;
+}
 .leftMenu {
   padding-left: 100px;
 }
 .rightMenu {
   padding-right: 100px;
 }
-.title {
+.content .title {
   height: 300px;
   font-size: 50px;
 }
-.intro { 
+.content .intro { 
   height: 150px;
   font-size: 20px;
 }
@@ -128,33 +165,30 @@ export default {
   height: calc(70vh - 100px);
 }
 .boardTransition-enter-active, .boardTransition-leave-active {
-  transition: all 2s;
+  transition: all .8s;
 }
 .boardTransition-enter, .boardTransition-leave-to, .boardBefore {
   height: 0px;
-  opacity: 0;
+  margin-bottom: 0px;
 }
 .boardTransition-enter-to, .boardTransition-leave, .boardAfter {
-  height: 60vh;
-  opacity: 1;
+  height: 80vh;
+  margin-bottom: 30px;
 }
 .board {
   position: relative;
   width: 90%;
-  background-color: rgba(227,239,244,0.7);
+  border: 2px solid #fff;
   border-radius: 20px;
-  margin-bottom: 30px;
+  background-color: rgba(227,239,244,0.4);
+  overflow: hidden;
 }
 .close {
   position: absolute;
-  right: 32px;
-  top: 32px;
+  right: 20px;
+  top: 20px;
   width: 32px;
   height: 32px;
-  opacity: 0.3;
-}
-.close:hover {
-  opacity: 1;
 }
 .close:before, .close:after {
   position: absolute;
@@ -164,12 +198,16 @@ export default {
   width: 2px;
   background-color: #333;
 }
+.close:hover:before, .close:hover:after{
+  background-color: #fff;
+}
 .close:before {
   transform: rotate(45deg);
 }
 .close:after {
   transform: rotate(-45deg);
 }
+<<<<<<< HEAD
 .test{
   height: 10px;
   width: 100px;
@@ -179,3 +217,12 @@ export default {
   margin: 10px;
 }
 </style>
+=======
+.componentWrapper {
+  width: 85%;
+  height: 85%;
+  color: #000;
+  overflow: scroll;
+}
+</style>
+>>>>>>> 17f40f161eb53706f4b51cdbd64e55279e1c5553
