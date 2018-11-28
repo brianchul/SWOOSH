@@ -13,13 +13,16 @@
       </transition>
       <div class='menuWrapper center'>
         <div class='menu center'>
-          <div v-for='(item,index) in menuItems' :key='index' @click='closeWindow(index,item.component)'
+          <div v-for='(item,index) in menuItems' :key='index' @click='closeWindow(index)'
           :id='(windowView)? "" : (selectedMenuIndex === index)? "selectedMenu" : ""'
           :class='(windowView)? (index === 0)? "leftMenu" : (index === 4 )? "rightMenu" : "" : ""'>
             {{ item.text }}
           </div>
         </div>
-        <transition name='boardTransition' @after-enter='boardHeightHandler = true' @before-leave='boardHeightHandler = false'>
+        <transition name='boardTransition'
+        @before-enter='contentRoot = menuItems[selectedMenuIndex].component'
+        @after-enter='boardHeightHandler = true'
+        @before-leave='boardHeightHandler = false'>
           <div v-show='boardView' class='board center'
           :class='(boardHeightHandler) ? "boardAfter" : ""'>
             <div class='close' @click='closeBoard'></div>
@@ -68,12 +71,11 @@ export default {
     }
   },
   methods: {
-    closeWindow: function(index,component) {
+    closeWindow: function(index) {
       this.$emit('closeWindow');
       this.selectedMenuIndex = index;
-      this.contentRoot = component;
       this.boardView = false;
-      setTimeout(() => this.boardView = true,800);
+      setTimeout(() => this.boardView = true,850);
     },
     closeBoard: function() {
       this.boardView = false;
@@ -137,11 +139,11 @@ export default {
 .rightMenu {
   padding-right: 100px;
 }
-.title {
+.content .title {
   height: 300px;
   font-size: 50px;
 }
-.intro { 
+.content .intro { 
   height: 150px;
   font-size: 20px;
 }
@@ -170,19 +172,15 @@ export default {
   width: 90%;
   border: 2px solid #fff;
   border-radius: 20px;
-  background-color: rgba(227,239,244,0.3);
+  background-color: rgba(227,239,244,0.4);
   overflow: hidden;
 }
 .close {
   position: absolute;
-  right: 32px;
-  top: 32px;
+  right: 20px;
+  top: 20px;
   width: 32px;
   height: 32px;
-  opacity: 0.3;
-}
-.close:hover {
-  opacity: 1;
 }
 .close:before, .close:after {
   position: absolute;
@@ -190,6 +188,9 @@ export default {
   content: ' ';
   height: 33px;
   width: 2px;
+  background-color: #333;
+}
+.close:hover:before, .close:hover:after{
   background-color: #fff;
 }
 .close:before {
@@ -201,7 +202,7 @@ export default {
 .componentWrapper {
   width: 85%;
   height: 85%;
-  border: 1px solid #000;
   color: #000;
+  overflow: scroll;
 }
 </style>
