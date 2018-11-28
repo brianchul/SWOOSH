@@ -19,13 +19,6 @@
             {{ item.text }}
           </div>
         </div>
-<<<<<<< HEAD
-        <transition name='boardTransition' @after-enter='afterOpen = true'>
-          <div v-if='openBoard' class='board center'
-          :class='(afterOpen) ? "boardAfter" : ""'>
-            <div class='close' @click='closeBoard'></div> 
-            <div class = 'test' >Hello World</div>
-=======
         <transition name='boardTransition'
         @before-enter='contentRoot = menuItems[selectedMenuIndex].component'
         @after-enter='boardHeightHandler = true'
@@ -36,7 +29,6 @@
             <div class='componentWrapper'>
               <component :is='contentRoot'></component>
             </div>
->>>>>>> 17f40f161eb53706f4b51cdbd64e55279e1c5553
           </div>
         </transition>
       </div>
@@ -207,17 +199,6 @@ export default {
 .close:after {
   transform: rotate(-45deg);
 }
-<<<<<<< HEAD
-.test{
-  height: 10px;
-  width: 100px;
-  border: 1px solid red; 
-  color: #fff;
-  padding: 50px;
-  margin: 10px;
-}
-</style>
-=======
 .componentWrapper {
   width: 85%;
   height: 85%;
@@ -225,4 +206,3 @@ export default {
   overflow: scroll;
 }
 </style>
->>>>>>> 17f40f161eb53706f4b51cdbd64e55279e1c5553
