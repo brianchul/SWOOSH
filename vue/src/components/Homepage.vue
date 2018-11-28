@@ -21,7 +21,8 @@
         <transition name='boardTransition' @after-enter='afterOpen = true'>
           <div v-if='openBoard' class='board center'
           :class='(afterOpen) ? "boardAfter" : ""'>
-            <div class='close' @click='closeBoard'></div>
+            <div class='close' @click='closeBoard'></div> 
+            <div class = 'test' >Hello World</div>
           </div>
         </transition>
       </div>
@@ -168,5 +169,13 @@ export default {
 }
 .close:after {
   transform: rotate(-45deg);
+}
+.test{
+  height: 10px;
+  width: 100px;
+  border: 1px solid red; 
+  color: #fff;
+  padding: 50px;
+  margin: 10px;
 }
 </style>
