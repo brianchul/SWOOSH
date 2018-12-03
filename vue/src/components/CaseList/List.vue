@@ -6,10 +6,8 @@
         </div>
         <div class='list'>
             <div class='row'>
-                <div v-for='(value,key) in tags' :key='key' class='item sortButtonWrapper'>
+                <div v-for='(value,key) in tags' :key='key' class='item'>
                     {{ value }}
-                    <div class='sortButton' :class='(sortButtonIndex === key) ? "down" : "up"'
-                    @click='onSort(key)'></div>
                 </div>
             </div>
             <div class='itemWrapper'>
@@ -59,7 +57,6 @@ export default {
                 inclination: '傾角',
                 price: '價格',
             },
-            sortButtonKey: null,
         }
     },
     methods: {
@@ -77,6 +74,7 @@ export default {
     align-items: center;
     color: #fff;
     font-size: 18px;
+    margin-top: 10px;
 }
 .listTitle {
     width: 95%;
