@@ -18,22 +18,36 @@ def FindAll():
         return None, 404
 
 
-def FindOne(cond):
+def FindOne(username):
     try:
-        query = Clients.query.filter_by(**cond)
+        query = Clients.query.filter_by(username=username)
         if query.one_or_none() is not None:
-            q = query.one_or_none()
+            """q = query.one_or_none()
             q.__dict__.pop("_sa_instance_state")
-            return q.__dict__, 200
+            q.__dict__.pop("passwd")"""
+            return None, 200
         else:
             return None, 404
     except InvalidRequestError:
         log().error("InvalidRequestError")
         return None, 400
 
+def Login(content):
+    try:
+        username = content['username']
+        passwd = content['passwd']
+        query = Clients.query.filter_by(username=username)
+        if query.one_or_none() is not None:
+            q = query.one_or_none()
+            if q.passwd == passwd:
+                return None, 200
+            return None, 401
+    except InvalidRequestError:
+        log().error("InvalidRequestError")
+        return None, 400
 
 def Create(cond):
-    createClients = Clients(**cond, create_time=datetime.now())
+    createClients = Clients(**cond)
     
     try:
         db_session.add(createClients)

@@ -10,12 +10,12 @@ class Missions(Base):
     # join_start = Column(DateTime)
     # join_deadline = Column(DateTime)
     launch_date = Column(DateTime)
-    launch_location = Column(String(100), ForeignKey("launch_location.location"))
-    launch_rocket = Column(String(50), ForeignKey("rocket.name"))
+    launch_location = Column(String(100), ForeignKey("launch_location.location", use_alter=True))
+    launch_rocket = Column(String(50), ForeignKey("rocket.name", use_alter=True))
     status = Column(String(50))
     target_inclination = Column(Float(4))
     target_height_km = Column(Float(2))
-    create_by = Column(Integer, ForeignKey("client.id"))
+    create_by = Column(Integer, ForeignKey("client.id", use_alter=True))
     create_time = Column(DateTime)
     
 
