@@ -2,9 +2,24 @@
   <div id='app center'>
     <div class='bg'></div>
     <Homepage @openWindow='windowView = true' @closeWindow='windowView = false' :windowView='windowView'/>
+    <div v-if="loginStatus" class="loginArea center">
+      <div class="loginDiv">
+        
+      </div>
+    </div>
+    <div v-if="regStatus" class="regArea center">
+      <div class="regDiv">
+
+      </div>
+    </div>
     <transition name='windowTransition'>
-      <div v-if='windowView' class='window'></div>
-    </transition>
+      <div v-if='windowView' class='window'>
+        <div class='box'>
+          <div class='box1 center' @click='regStatusHandler'>註冊</div>
+          <div class='box2 center' @click='logStatusHandler'>登入</div>
+        </div>
+      </div>
+    </transition> 
   </div>
 </template>
 
@@ -19,8 +34,18 @@ export default {
   data() {
     return {
       windowView: true,
+      regStatus: false,
+      loginStatus: false,
     } 
   },
+  methods: {
+    regStatusHandler: function() {
+      this.regStatus = !this.regStatus;
+    },
+    logStatusHandler: function() {
+      this.loginStatus = !this.loginStatus;
+    }
+  }
 }
 </script>
 
@@ -64,5 +89,46 @@ body {
 }
 .windowTransition-enter, .windowTransition-leave-to {
   opacity: 0;
+}
+.box {
+  color: #fff;
+  pointer-events: auto;
+  display: flex;
+  position: fixed;
+  top: 130px;
+  margin-left: 68.6vw;
+  height: 50px;
+  width: 150px;
+  font-family: Colfax,sans-serif;
+}
+.box1 {
+  height: 50px;
+  width: 75px;
+}
+.box2 {
+  height: 50px;
+  width: 75px;
+}
+.regArea {
+  position: absolute;
+  top: 0px;
+  width: 100vw;
+  height: 100vh;
+}
+.regDiv {
+  height: 70vh;
+  width: 100%;
+  background-color: black;
+}
+.loginArea {
+  position: absolute;
+  top: 0px;
+  width: 100vw;
+  height: 100vh;
+}
+.loginDiv {
+  height: 70vh;
+  width: 100%;
+  background-color: black;
 }
 </style>
