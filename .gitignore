@@ -16,3 +16,7 @@ backend/pkg/__pycache__/
 backend/config/__pycache__/
 
 backend/config/conf\.py
+
+backend/venv/
+
+*.pyc
