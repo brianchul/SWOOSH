@@ -6,7 +6,7 @@ from models import rocket
 class Timelines(Base):
     __tablename__ = "launch_timeline"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    rocket_name = Column(String(50), ForeignKey("rocket.name"))
+    rocket_name = Column(String(50), ForeignKey("rocket.name", use_alter=True))
     launch_day = Column(DateTime)
     launch_location = Column(String(50))
     mission_discription = Column(String(1000))
