@@ -3,8 +3,16 @@
     <div class='bg'></div>
     <Homepage @openWindow='windowView = true' @closeWindow='windowView = false' :windowView='windowView'/>
     <div v-if="loginStatus" class="loginArea center">
-      <div class="loginDiv">
-        
+      <div class="loginDiv center">
+        <form @submit.prevent="afterSubmit($event)">
+          <label>User Name</label>
+          <input type="text" v-model="loginForm.username" required>
+          <br>
+          <label>Password</label>
+          <input type="password" v-model="loginForm.password" required>
+          <br>
+          <button type="submit" @click='apiTest(loginForm)'>Log In</button>
+        </form>
       </div>
     </div>
     <div v-if="regStatus" class="regArea center">
@@ -25,6 +33,7 @@
 
 <script>
 import Homepage from './components/Homepage.vue'
+import api from './lib/' 
 
 export default {
   name: 'app',
@@ -36,6 +45,10 @@ export default {
       windowView: true,
       regStatus: false,
       loginStatus: false,
+      loginForm: {
+        username: '',
+        password: '',
+      }
     } 
   },
   methods: {
@@ -44,7 +57,14 @@ export default {
     },
     logStatusHandler: function() {
       this.loginStatus = !this.loginStatus;
-    }
+    },
+    apiTest: function(payload) {
+      api.postRegist(payload);
+    },
+    afterSubmit: function(event) {
+      event.preventDefault()
+      this.loginStatus = false
+    } 
   }
 }
 </script>
@@ -133,5 +153,8 @@ body {
   height: 70vh;
   width: 100%;
   background-color: black;
+}
+form label {
+  color: #fff;
 }
 </style>
