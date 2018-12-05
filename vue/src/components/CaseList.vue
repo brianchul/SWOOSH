@@ -1,17 +1,18 @@
 <template>
     <div>
         <div class='title'>
-            
             已申請清單
         </div>
         <div class='separate'></div>
         <List :payload='needList' listName='need'/>
         <List :payload='saleList' listName='sale'/>
+        <button class='testBtn center' @click='apiTest'>Click</button>
     </div>
 </template>
 
 <script>
 import List from './CaseList/List.vue'
+import api from '../lib/'
 
 export default {
     name: 'CaseList',
@@ -144,6 +145,13 @@ export default {
                 },
             ],
         }
+    },
+    methods: {
+        apiTest: function() {
+            api.postUser({
+                studentNumber: 10,
+            })
+        }
     }
 }
 </script>
@@ -159,5 +167,11 @@ export default {
     width: 100%;
     height: 5px;
     border-bottom: 2px solid #fff;
+}
+.testBtn {
+    width: 100%;
+    height: 100px;
+    background-color: red;
+    border-radius: 10px;
 }
 </style>
