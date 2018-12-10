@@ -10,14 +10,13 @@ class Missions(Base):
     # join_start = Column(DateTime)
     # join_deadline = Column(DateTime)
     launch_date = Column(DateTime)
-    launch_location = Column(String(100), ForeignKey("launch_location.location"))
-    launch_rocket = Column(String(50), ForeignKey("rocket.name"))
+    launch_location = Column(String(100), ForeignKey("launch_location.location", use_alter=True))
+    launch_rocket = Column(String(50), ForeignKey("rocket.name", use_alter=True))
     status = Column(String(50))
     target_inclination = Column(Float(4))
     target_height_km = Column(Float(2))
-    create_by = Column(Integer, ForeignKey("client.id"))
-    create_time = Column(DateTime)
-    
+    create_by = Column(Integer, ForeignKey("client.id", use_alter=True))
+
 
 
 '''    詢問Q： 可以共乘 合資的條件(高度軌道需求相同)
