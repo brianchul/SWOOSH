@@ -3,31 +3,47 @@
     <div class='contentWrapper center'>
       <transition name='contentTransition' @after-leave='boardView = true'>
         <div v-show='windowView' class='content'>
-          <div class='title center'>Super Rocket</div>
-          <div class='intro center'>
-            IF YOU DON'T HAVE ENOUGH MONEY TO LAUNCH THE SATELLITE.
-            <br/>
-            WE OFFER SATELLITE CO-LAUNCHING SEARCH HELP TO REDUCE YOUR COSTS.
+          <div class='boxWrapper'>
+            <div class='box center' @click='status = "home"' v-if='status !== "home"' >
+              <div class='close'></div>
+            </div>
+            <div class='box center' @click='logout' v-if='userInfo.isLoggedIn'>登出</div>
+            <div class='box center' @click='status = "regist"' v-if='status !== "regist" && !userInfo.isLoggedIn'>註冊</div>
+            <div class='box center' @click='status = "login"' v-if='status !== "login" && !userInfo.isLoggedIn'>登入</div>
+            <div class='box center' v-if='userInfo.isLoggedIn'> {{userInfo.fullname}}</div>
+          </div>
+          <div v-if="status === 'home'">
+            <div class='title center'>Super Rocket</div>
+            <div class='intro center'>
+              IF YOU DON'T HAVE ENOUGH MONEY TO LAUNCH THE SATELLITE.
+              <br/>
+              WE OFFER SATELLITE CO-LAUNCHING SEARCH HELP TO REDUCE YOUR COSTS.
+            </div>
+          </div>
+          <div v-else class="formArea center">
+            <Form :status='status' @closeForm='status = "home"' @setLogin='login'/>
           </div>
         </div>
       </transition>
       <div class='menuWrapper center'>
         <div class='menu center'>
-          <div v-for='(item,index) in menuItems' :key='index' @click='closeWindow(index)'
-          :id='(windowView)? "" : (selectedMenuIndex === index)? "selectedMenu" : ""'
-          :class='(windowView)? (index === 0)? "leftMenu" : (index === 4 )? "rightMenu" : "" : ""'>
+          <div v-for='(item,index) in menuItems' :key='item.component' @click='changeWindow(item.component)'
+          :id='(!windowView && (selectedMenuItem === item.component))? "selectedMenu" : ""'
+          :class='(windowView && (index === 0))? "leftMenu" : (windowView && (index === 4 ))? "rightMenu" : ""'>
             {{ item.text }}
           </div>
         </div>
         <transition name='boardTransition'
-        @before-enter='contentRoot = menuItems[selectedMenuIndex].component'
+        @before-enter='contentRoot = selectedMenuItem'
         @after-enter='boardHeightHandler = true'
         @before-leave='boardHeightHandler = false'>
           <div v-show='boardView' class='board center'
           :class='(boardHeightHandler) ? "boardAfter" : ""'>
-            <div class='close' @click='closeBoard'></div>
+            <div class='close cross' @click='closeBoard'></div>
             <div class='componentWrapper'>
-              <component :is='contentRoot'></component>
+              <component :is='contentRoot'
+              @setAlert='$emit("setAlert")'
+              :userInfo='userInfo'></component>
             </div>
           </div>
         </transition>
@@ -37,11 +53,13 @@
 </template>
 
 <script>
+/* eslint-disable */
 import AboutUs from './AboutUs.vue'
 import History from './History.vue'
 import Application from './Application.vue'
 import CaseList from './CaseList.vue'
 import Order from './Order.vue'
+import Form from './Homepage/Form.vue'
 
 export default {
   name: 'Homepage',
@@ -51,12 +69,15 @@ export default {
     Application,
     CaseList,
     Order,
+    Form,
   },
   props: {
     windowView: Boolean,
+    alert: Object,
   },
   data() {
     return {
+      status: 'home', // login, regist, home
       menuItems: [
         {text:'ABOUT US', component:'AboutUs'},
         {text:'HISTORY', component:'History'},
@@ -64,23 +85,53 @@ export default {
         {text:'CASE LIST', component:'CaseList'},
         {text:'ORDER', component:'Order'},
       ],
-      selectedMenuIndex: 0,
+      selectedMenuItem: 'AboutUs',
       contentRoot: 'AboutUs',
       boardView: false,
       boardHeightHandler: false,
+      userInfo: {
+        isLoggedIn: false,
+        userId: null,
+        fullname: '',
+        permission: 'guest',
+      },
     }
   },
   methods: {
-    closeWindow: function(index) {
-      this.$emit('closeWindow');
-      this.selectedMenuIndex = index;
-      this.boardView = false;
-      setTimeout(() => this.boardView = true,850);
+    changeWindow: function(index) {
+      if(!this.userInfo.isLoggedIn && index !== 'AboutUs' && index !== 'History') {
+        localStorage.setItem('alert',JSON.stringify({
+          hook: true,
+          status: 'error',
+          message: 'login first',
+        }))
+        this.$emit('setAlert')
+      } else {
+        this.$emit('closeWindow');
+        this.selectedMenuItem = index;
+        this.boardView = false;
+        setTimeout(() => this.boardView = true,850);
+      }
     },
     closeBoard: function() {
       this.boardView = false;
       this.$emit('openWindow');
     },
+    login: function() {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    },
+    logout: function() {
+      this.userInfo = {
+        isLoggedIn: false,
+        userId: null,
+        fullname: '',
+        permission: 'guest',
+      }
+      localStorage.setItem('userInfo',JSON.stringify(this.userInfo))
+    },
+  },
+  created() {
+    this.login();
   },
 }
 </script>
@@ -100,6 +151,7 @@ export default {
   overflow: hidden;
 }
 .content {
+  position: relative;
   width: 100%;
   color: #fff;
   font-size: 30px;
@@ -175,34 +227,37 @@ export default {
   background-color: rgba(227,239,244,0.4);
   overflow: hidden;
 }
-.close {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  width: 32px;
-  height: 32px;
-}
-.close:before, .close:after {
-  position: absolute;
-  left: 15px;
-  content: ' ';
-  height: 33px;
-  width: 2px;
-  background-color: #333;
-}
-.close:hover:before, .close:hover:after{
-  background-color: #fff;
-}
-.close:before {
-  transform: rotate(45deg);
-}
-.close:after {
-  transform: rotate(-45deg);
-}
 .componentWrapper {
   width: 85%;
   height: 85%;
   color: #000;
   overflow: scroll;
+}
+.cross {
+  top: 20px;
+  right: 20px;
+}
+.formArea {
+  position: fixed;
+  height: 70vh;
+  width: 100vw;
+}
+.boxWrapper {
+  z-index: 5;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 18px;
+  color: #fff;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: row-reverse;
+  margin-right: 20vw;
+  height: 50px;
+  font-family: Colfax,sans-serif;
+}
+.box {
+  height: 50px;
+  width: 75px;
 }
 </style>
