@@ -13,7 +13,6 @@ class ClientOrders(Base):
     eta_height_km = Column(String(100))
     arrival_date = Column(DateTime)
     inclination = Column(String(50))
-    create_time = Column(DateTime)
     budget_billion = Column(String(100))
 
 
@@ -22,5 +21,5 @@ class MissionOrders(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     order_id = Column(Integer, ForeignKey("client_order.id", use_alter=True))
     mission_id = Column(Integer, ForeignKey("mission.id", use_alter=True))
-    create_time = Column(DateTime)
+
 
