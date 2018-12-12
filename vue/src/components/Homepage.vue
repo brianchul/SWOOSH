@@ -102,8 +102,9 @@ export default {
       if(!this.userInfo.isLoggedIn && index !== 'AboutUs' && index !== 'History') {
         localStorage.setItem('alert',JSON.stringify({
           hook: true,
-          status: 'error',
-          message: 'login first',
+          status: 'fail',
+          title: '操作失敗',
+          message: '請先登入',
         }))
         this.$emit('setAlert')
       } else {

@@ -1,18 +1,20 @@
 <template>
     <form @submit.prevent="afterSubmit($event)" class="formWrapper center">
-        <div class='formItem'>
-            <label>帳號</label>
-            <input type="text" v-model="form.username" required/>
-        </div>
-        <div class='formItem'>
-            <label>密碼</label>
-            <input type="password" v-model="form.password" required/>
-        </div>
-        <div v-if='status === "regist"'>
+        <div class="formItemWrapper">
             <div class='formItem'>
+                <label>帳號</label>
+                <input type="text" v-model="form.username" required/>
+            </div>
+            <div class='formItem'>
+                <label>密碼</label>
+                <input type="password" v-model="form.password" required/>
+            </div>
+            <div class='formItem' v-if='status === "regist"'>
                 <label>再次輸入密碼</label>
                 <input type="password" v-model="form.checkPassword" required/>
             </div>
+        </div>
+        <div class="formItemWrapper" v-if='status === "regist"'>
             <div class='formItem'>
                 <label>姓名</label>
                 <input type="text" v-model="form.fullname" required/>
@@ -47,6 +49,8 @@ export default {
     },
     data() {
         return {
+            loginStatus: null, // true(succeed), false(failed), null(not login yet)
+            registStatus: null, // true(succeed), false(failed), null(not regist yet)
             form: {
                 username: '',
                 password: '',
@@ -62,6 +66,10 @@ export default {
         apiTest: function(payload) {
             switch(this.status) {
                 case 'login':
+                    // api.postLogin({
+                    //     username: payload.username,
+                    //     password: payload.password,
+                    // });
                     localStorage.setItem('userInfo',JSON.stringify({
                         isLoggedIn: true,
                         userId: null,
@@ -69,10 +77,7 @@ export default {
                         permission: payload.username,
                     }))
                     this.$emit('setLogin')
-                    // api.postLogin({
-                    //     username: payload.username,
-                    //     password: payload.password,
-                    // });
+                    //this.loginStatus = (payload.username === 'user' || payload.username === 'company')
                     break;
                 case 'regist':
                     // api.postRegist(payload);
@@ -82,17 +87,26 @@ export default {
         afterSubmit: function(event) {
             event.preventDefault();
             this.$emit('closeForm');
-        } 
+        },
+        loginSucceed: function() {
+            
+        },
+        loginFailed: function() {
+
+        },
     }
 }
 </script>
 
 <style scoped>
 .formWrapper {
-  flex-direction: column;
   height: 70vh;
   width: 100%;
   background-color: black;
+}
+.formItemWrapper {
+  display: flex;
+  flex-direction: column;
 }
 .formItem {
   display: flex;
@@ -108,17 +122,25 @@ export default {
   font-size: 18px;
 }
 .formItem input {
-  width: 180px;
-  height: 20px;
-  border-radius: 10px;
+  width: 176px;
+  height: 16px;
+  border-radius: 5px;
   padding: 10px;
+  background: transparent;
+  border: 2px solid #fff;
+  color: #fff;
 }
 .formItem select {
   width: 200px;
   height: 40px;
-  border-radius: 10px;
+  background: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+  text-indent: 10px;
 }
 form button {
+  position: absolute;
+  bottom: 130px;
   width: 100px;
   height: 40px;
   background-color: #fff;
