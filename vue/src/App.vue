@@ -1,71 +1,60 @@
 <template>
   <div id='app center'>
     <div class='bg'></div>
-    <Homepage @openWindow='windowView = true' @closeWindow='windowView = false' :windowView='windowView'/>
-    <div v-if="loginStatus" class="loginArea center">
-      <div class="loginDiv center">
-        <form @submit.prevent="afterSubmit($event)">
-          <label>User Name</label>
-          <input type="text" v-model="loginForm.username" required>
-          <br>
-          <label>Password</label>
-          <input type="password" v-model="loginForm.password" required>
-          <br>
-          <button type="submit" @click='apiTest(loginForm)'>Log In</button>
-        </form>
-      </div>
-    </div>
-    <div v-if="regStatus" class="regArea center">
-      <div class="regDiv">
-
-      </div>
-    </div>
+    <Homepage
+      @openWindow='windowView = true'
+      @closeWindow='windowView = false'
+      :windowView='windowView'
+      @setAlert='setAlert'/>
     <transition name='windowTransition'>
-      <div v-if='windowView' class='window'>
-        <div class='box'>
-          <div class='box1 center' @click='regStatusHandler'>註冊</div>
-          <div class='box2 center' @click='logStatusHandler'>登入</div>
-        </div>
-      </div>
-    </transition> 
+      <div v-if='windowView' class='window'></div>
+    </transition>
+    <div class='alertWrapper center' :class='(alert.hook) ? "alertEnter" : "alertOut"'>
+      <div class='alertBox center'>{{alert.message}}</div>
+    </div>
   </div>
 </template>
 
 <script>
 import Homepage from './components/Homepage.vue'
-import api from './lib/' 
 
 export default {
   name: 'app',
   components: {
-    Homepage
+    Homepage,
   },
   data() {
     return {
       windowView: true,
-      regStatus: false,
-      loginStatus: false,
-      loginForm: {
-        username: '',
-        password: '',
-      }
+      alert: {
+        hook: false,
+        status: '', // 'success', 'fail', 'warning', ''
+        message: '',
+      },
     } 
   },
   methods: {
-    regStatusHandler: function() {
-      this.regStatus = !this.regStatus;
+    initAlert: function() {
+      localStorage.setItem('alert',JSON.stringify({
+        hook: false,
+        status: '',
+        message: '',
+      }))
     },
-    logStatusHandler: function() {
-      this.loginStatus = !this.loginStatus;
+    resetAlert: function() {
+      this.alert = JSON.parse(localStorage.getItem('alert'))
     },
-    apiTest: function(payload) {
-      api.postRegist(payload);
+    setAlert: function() {
+      this.resetAlert();
+      setTimeout(() => {
+        this.initAlert();
+        this.resetAlert();
+      },3000);
     },
-    afterSubmit: function(event) {
-      event.preventDefault()
-      this.loginStatus = false
-    } 
-  }
+  },
+  created() {
+    this.initAlert();
+  },
 }
 </script>
 
@@ -113,48 +102,46 @@ body {
 ::-webkit-scrollbar { 
     display: none; 
 }
-.box {
-  color: #fff;
-  pointer-events: auto;
-  display: flex;
+.close {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+}
+.close:before, .close:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 33px;
+  width: 2px;
+  background-color: #333;
+}
+.close:hover:before, .close:hover:after{
+  background-color: #fff;
+}
+.close:before {
+  transform: rotate(45deg);
+}
+.close:after {
+  transform: rotate(-45deg);
+}
+.alertWrapper {
   position: fixed;
-  top: 130px;
-  margin-left: 68.6vw;
-  height: 50px;
-  width: 150px;
-  font-family: Colfax,sans-serif;
-}
-.box1 {
-  height: 50px;
-  width: 75px;
-}
-.box2 {
-  height: 50px;
-  width: 75px;
-}
-.regArea {
-  position: absolute;
-  top: 0px;
-  width: 100vw;
-  height: 100vh;
-}
-.regDiv {
-  height: 70vh;
   width: 100%;
-  background-color: black;
+  height: 100px;
+  color: #000;
+  transition: bottom .5s;
 }
-.loginArea {
-  position: absolute;
-  top: 0px;
-  width: 100vw;
-  height: 100vh;
+.alertEnter {
+  bottom: 10px;
 }
-.loginDiv {
-  height: 70vh;
-  width: 100%;
-  background-color: black;
+.alertOut {
+  bottom: -200px;
 }
-form label {
-  color: #fff;
+.alertBox {
+  width: 400px;
+  height: 100px;
+  border-radius: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 1em red;
 }
 </style>
