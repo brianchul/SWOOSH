@@ -99,6 +99,7 @@ export default {
   },
   methods: {
     changeWindow: function(index) {
+      console.log(this.userInfo.isLoggedIn)
       if(!this.userInfo.isLoggedIn && index !== 'AboutUs' && index !== 'History') {
         localStorage.setItem('alert',JSON.stringify({
           hook: true,
@@ -130,8 +131,17 @@ export default {
       }
       localStorage.setItem('userInfo',JSON.stringify(this.userInfo))
     },
+    initUserInfo: function() {
+      localStorage.setItem('userInfo',JSON.stringify({
+        isLoggedIn: false,
+        userId: null,
+        fullname: '',
+        permission: 'guest',
+      }))
+    },
   },
   created() {
+    this.initUserInfo();
     this.login();
   },
 }
