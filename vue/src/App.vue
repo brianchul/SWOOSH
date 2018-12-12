@@ -9,8 +9,11 @@
     <transition name='windowTransition'>
       <div v-if='windowView' class='window'></div>
     </transition>
-    <div class='alertWrapper center' :class='(alert.hook) ? "alertEnter" : "alertOut"'>
-      <div class='alertBox center'>{{alert.message}}</div>
+    <div class='alertWrapper center' :class='alert.hook ? "alertEnter" : "alertOut"'>
+      <div class='alertBox center' :class='alert.status+"Style"'>
+        <div>{{alert.title}}</div>
+        <div>{{alert.message}}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -29,6 +32,7 @@ export default {
       alert: {
         hook: false,
         status: '', // 'success', 'fail', 'warning', ''
+        title: '',
         message: '',
       },
     } 
@@ -38,6 +42,7 @@ export default {
       localStorage.setItem('alert',JSON.stringify({
         hook: false,
         status: '',
+        title: '',
         message: '',
       }))
     },
@@ -142,6 +147,11 @@ body {
   height: 100px;
   border-radius: 20px;
   background-color: #fff;
+}
+.successStyle {
+  box-shadow: 0 0 1em green;
+}
+.failStyle {
   box-shadow: 0 0 1em red;
 }
 </style>

@@ -154,7 +154,8 @@ export default {
         hello: function() {
             localStorage.setItem('alert',JSON.stringify({
                 hook: true,
-                status: 'error',
+                status: 'success',
+                title: 'hi',
                 message: 'login first',
             }))
             this.$emit('setAlert')
