@@ -6,7 +6,8 @@
         <div class='separate'></div>
         <List :payload='needList' listName='need'/>
         <List :payload='saleList' listName='sale'/>
-        <button class='testBtn center' @click='apiTest'>Click</button>
+        <button class='testBtn center' @click='hello' v-if='userInfo.permission'> {{userInfo.permission}} Click</button>
+
     </div>
 </template>
 
@@ -18,6 +19,9 @@ export default {
     name: 'CaseList',
     components: {
         List,
+    },
+    props: {
+        userInfo: Object,
     },
     data() {
         return {
@@ -147,12 +151,16 @@ export default {
         }
     },
     methods: {
-        apiTest: function() {
-            api.postUser({
-                studentNumber: 10,
-            })
+        hello: function() {
+            localStorage.setItem('alert',JSON.stringify({
+                hook: true,
+                status: 'success',
+                title: 'hi',
+                message: 'login first',
+            }))
+            this.$emit('setAlert')
         }
-    }
+    },
 }
 </script>
 
