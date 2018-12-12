@@ -99,7 +99,6 @@ export default {
   },
   methods: {
     changeWindow: function(index) {
-      console.log(this.userInfo.isLoggedIn)
       if(!this.userInfo.isLoggedIn && index !== 'AboutUs' && index !== 'History') {
         localStorage.setItem('alert',JSON.stringify({
           hook: true,
@@ -119,9 +118,6 @@ export default {
       this.boardView = false;
       this.$emit('openWindow');
     },
-    login: function() {
-      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    },
     logout: function() {
       this.userInfo = {
         isLoggedIn: false,
@@ -131,18 +127,9 @@ export default {
       }
       localStorage.setItem('userInfo',JSON.stringify(this.userInfo))
     },
-    initUserInfo: function() {
-      localStorage.setItem('userInfo',JSON.stringify({
-        isLoggedIn: false,
-        userId: null,
-        fullname: '',
-        permission: 'guest',
-      }))
-    },
   },
   created() {
-    this.initUserInfo();
-    this.login();
+    this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
   },
 }
 </script>
