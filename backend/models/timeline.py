@@ -10,4 +10,3 @@ class Timelines(Base):
     launch_day = Column(DateTime)
     launch_location = Column(String(50))
     mission_discription = Column(String(1000))
-    create_time = Column(DateTime)
