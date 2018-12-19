@@ -45,10 +45,10 @@ To leave virtual environment
 deactivate
 ```
 
-Config your database address in
+Config your database address from conf_example.py to conf.py
 
 ```sh
-app/main/config
+config/conf_example.py
 ```
 
 Init Database
