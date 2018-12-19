@@ -127,9 +127,12 @@ export default {
       }
       localStorage.setItem('userInfo',JSON.stringify(this.userInfo))
     },
+    login: function() {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    },
   },
   created() {
-    this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    this.login();
   },
 }
 </script>
