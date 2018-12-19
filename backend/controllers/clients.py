@@ -56,7 +56,6 @@ def Login(content):
             if check_encrypted_password(passwd, q.passwd):
                 orders = ClientOrders.query.filter_by(request_by=query.one().id).all()
                 q.__dict__.pop("passwd")
-                q.__dict__.pop("id")
                 q.__dict__.pop("_sa_instance_state")
                 if orders is not None:
                     resp = q.__dict__
