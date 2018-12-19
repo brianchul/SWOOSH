@@ -16,8 +16,7 @@ class Missions(Base):
     target_inclination = Column(Float(4))
     target_height_km = Column(Float(2))
     create_by = Column(Integer, ForeignKey("client.id", use_alter=True))
-    create_time = Column(DateTime)
-    
+
 
 
 '''    詢問Q： 可以共乘 合資的條件(高度軌道需求相同)

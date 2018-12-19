@@ -1,10 +1,20 @@
 <template>
   <div id='app center'>
     <div class='bg'></div>
-    <Homepage @openWindow='windowView = true' @closeWindow='windowView = false' :windowView='windowView'/>
+    <Homepage
+      @openWindow='windowView = true'
+      @closeWindow='windowView = false'
+      :windowView='windowView'
+      @setAlert='setAlert'/>
     <transition name='windowTransition'>
       <div v-if='windowView' class='window'></div>
     </transition>
+    <div class='alertWrapper center' :class='alert.hook ? "alertEnter" : "alertOut"'>
+      <div class='alertBox center' :class='alert.status+"Style"'>
+        <div>{{alert.title}}</div>
+        <div>{{alert.message}}</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -14,12 +24,41 @@ import Homepage from './components/Homepage.vue'
 export default {
   name: 'app',
   components: {
-    Homepage
+    Homepage,
   },
   data() {
     return {
       windowView: true,
+      alert: {
+        hook: false,
+        status: '', // 'success', 'fail', 'warning', ''
+        title: '',
+        message: '',
+      },
     } 
+  },
+  methods: {
+    initAlert: function() {
+      localStorage.setItem('alert',JSON.stringify({
+        hook: false,
+        status: '',
+        title: '',
+        message: '',
+      }))
+    },
+    resetAlert: function() {
+      this.alert = JSON.parse(localStorage.getItem('alert'))
+    },
+    setAlert: function() {
+      this.resetAlert();
+      setTimeout(() => {
+        this.initAlert();
+        this.resetAlert();
+      },3000);
+    },
+  },
+  created() {
+    this.initAlert();
   },
 }
 </script>
@@ -67,5 +106,52 @@ body {
 }
 ::-webkit-scrollbar { 
     display: none; 
+}
+.close {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+}
+.close:before, .close:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 33px;
+  width: 2px;
+  background-color: #333;
+}
+.close:hover:before, .close:hover:after{
+  background-color: #fff;
+}
+.close:before {
+  transform: rotate(45deg);
+}
+.close:after {
+  transform: rotate(-45deg);
+}
+.alertWrapper {
+  position: fixed;
+  width: 100%;
+  height: 100px;
+  color: #000;
+  transition: bottom .5s;
+}
+.alertEnter {
+  bottom: 10px;
+}
+.alertOut {
+  bottom: -200px;
+}
+.alertBox {
+  width: 400px;
+  height: 100px;
+  border-radius: 20px;
+  background-color: #fff;
+}
+.successStyle {
+  box-shadow: 0 0 1em green;
+}
+.failStyle {
+  box-shadow: 0 0 1em red;
 }
 </style>
