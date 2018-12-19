@@ -4,3 +4,10 @@ dev:
 test:
 	@echo "test"
 	python3 test.py
+
+init:
+	@echo "init database..."
+	python initDB.py
+
+clean-pyc:
+	find . -name "*.pyc" -exec rm -f {} \;
