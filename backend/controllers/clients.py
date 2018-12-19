@@ -66,6 +66,8 @@ def Login(content):
                 
                 return resp, 200
             return None, 401
+        else:
+            return None, 401
     except InvalidRequestError:
         log().error("InvalidRequestError")
         return None, 400
