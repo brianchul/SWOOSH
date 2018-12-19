@@ -21,7 +21,10 @@
             </div>
           </div>
           <div v-else class="formArea center">
-            <Form :status='status' @closeForm='status = "home"' @setLogin='login'/>
+            <Form :status='status'
+            @closeForm='status = "home"'
+            @setLogin='login'
+            @setAlert='$emit("setAlert")'/>
           </div>
         </div>
       </transition>
@@ -99,7 +102,6 @@ export default {
   },
   methods: {
     changeWindow: function(index) {
-      console.log(this.userInfo.isLoggedIn)
       if(!this.userInfo.isLoggedIn && index !== 'AboutUs' && index !== 'History') {
         localStorage.setItem('alert',JSON.stringify({
           hook: true,
@@ -130,6 +132,7 @@ export default {
         permission: 'guest',
       }
       localStorage.setItem('userInfo',JSON.stringify(this.userInfo))
+      localStorage.removeItem('userProfile')
     },
     initUserInfo: function() {
       localStorage.setItem('userInfo',JSON.stringify({
