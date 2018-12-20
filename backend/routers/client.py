@@ -25,7 +25,7 @@ def registerClient():
     r = request.get_json()
     resp, code = clients.FindOne(r['username'])
     if code == 200:
-        return warpResponse(None, code, "User Exist")
+        return warpResponse(None, 401, "User Exist")
     code = clients.Create(r)
     return warpResponse(None, code)
 
