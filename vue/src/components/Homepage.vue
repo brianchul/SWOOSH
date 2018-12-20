@@ -21,7 +21,10 @@
             </div>
           </div>
           <div v-else class="formArea center">
-            <Form :status='status' @closeForm='status = "home"' @setLogin='login'/>
+            <Form :status='status'
+            @closeForm='status = "home"'
+            @setLogin='login'
+            @setAlert='$emit("setAlert")'/>
           </div>
         </div>
       </transition>
@@ -126,6 +129,7 @@ export default {
         permission: 'guest',
       }
       localStorage.setItem('userInfo',JSON.stringify(this.userInfo))
+      localStorage.removeItem('userProfile')
     },
     login: function() {
       this.userInfo = JSON.parse(localStorage.getItem('userInfo'))

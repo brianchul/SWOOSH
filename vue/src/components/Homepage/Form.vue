@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="afterSubmit($event)" class="formWrapper center">
+    <form class="formWrapper center">
         <div class="formItemWrapper">
             <div class='formItem'>
                 <label>帳號</label>
@@ -35,12 +35,13 @@
                 </select>
             </div>
         </div>
-        <button type="submit" @click='apiTest(form)'>{{(status === 'login') ? '登入' : '註冊'}}</button>
+        <button type="submit" @click.prevent='apiTest(form)'>{{(status === 'login') ? '登入' : '註冊'}}</button>
     </form>
 </template>
 
 <script>
 import api from '../../lib/' 
+import Homepage from '../Homepage.vue'
 
 export default {
     name: 'Form',
@@ -63,36 +64,34 @@ export default {
         }
     },
     methods: {
+        setLogin: function() {
+            this.$emit('setLogin');
+            this.$emit('closeForm');
+        },
+        setAlert: function() {
+            this.$emit('setAlert');
+        },
         apiTest: function(payload) {
             switch(this.status) {
                 case 'login':
-                    // api.postLogin({
-                    //     username: payload.username,
-                    //     password: payload.password,
-                    // });
-                    localStorage.setItem('userInfo',JSON.stringify({
-                        isLoggedIn: true,
-                        userId: null,
-                        fullname: 'Super Rocket',
-                        permission: payload.username,
-                    }))
-                    this.$emit('setLogin')
-                    //this.loginStatus = (payload.username === 'user' || payload.username === 'company')
+                    api.postLogin(payload,this.setLogin,this.setAlert);
                     break;
                 case 'regist':
+                    if(payload.checkPassword != payload.password){
+                        localStorage.setItem('alert',JSON.stringify({
+                            hook: true,
+                            status: 'fail',
+                            title: '操作失敗：',
+                            message: '密碼錯誤，請重新輸入',
+                        }))
+                        this.$emit('setAlert');
+                    } else {
+                        api.postRegist(payload);
+                        this.$emit('closeForm');
+                    }
                     // api.postRegist(payload);
                     break;
             }
-        },
-        afterSubmit: function(event) {
-            event.preventDefault();
-            this.$emit('closeForm');
-        },
-        loginSucceed: function() {
-            
-        },
-        loginFailed: function() {
-
         },
     }
 }
@@ -102,7 +101,7 @@ export default {
 .formWrapper {
   height: 70vh;
   width: 100%;
-  background-color: black;
+  background-image: url(../../assets/roc1.jpg);
 }
 .formItemWrapper {
   display: flex;
@@ -118,7 +117,7 @@ export default {
   text-align: center;
   width: 120px;
   padding-right: 10px;
-  color: #fff;
+  color: black;
   font-size: 18px;
 }
 .formItem input {
@@ -127,15 +126,15 @@ export default {
   border-radius: 5px;
   padding: 10px;
   background: transparent;
-  border: 2px solid #fff;
-  color: #fff;
+  border: 2px solid black;
+  color: black;
 }
 .formItem select {
   width: 200px;
   height: 40px;
   background: transparent;
-  border: 2px solid #fff;
-  color: #fff;
+  border: 2px solid black;
+  color: black;
   text-indent: 10px;
 }
 form button {
