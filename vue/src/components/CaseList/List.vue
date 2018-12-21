@@ -17,15 +17,10 @@
                         {{ value }}
                     </div>
                     <div class='buttonWrapper center'>
-                        <div class='button center'>
-                            {{ buttonText }}
-                        </div>
+                        {{ buttonText }}
                     </div>
                 </div>
             </div>
-        </div>
-        <div class='separate'>
-            <div v-for='index in 100' :key='index'></div>
         </div>
     </div>
 </template>
@@ -135,25 +130,6 @@ export default {
 .buttonWrapper:hover .button{
     background-color: #000;
     color: #fff;
-}
-.button {
-    width: 76px;
-    height: 26px;
-    background-color: #fff;
-    border-radius: 13px;
-    color: #333;
-}
-.separate {
-    display: flex;
-    width: calc(95% - 2px);
-    height: 5px;
-    border: 2px solid #fff;
-    border-top: none;
-    border-right: none;
-}
-.separate div {
-    width: calc(1% - 2px);
-    border-right: 2px solid #fff;
 }
 .sortButtonWrapper {
     display: flex;

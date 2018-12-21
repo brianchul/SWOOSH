@@ -128,11 +128,18 @@ export default {
         fullname: '',
         permission: 'guest',
       }
-      localStorage.setItem('userInfo',JSON.stringify(this.userInfo))
-      localStorage.removeItem('userProfile')
+      localStorage.removeItem('userInfo')
     },
     login: function() {
-      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      const info = JSON.parse(localStorage.getItem('userInfo'))
+      if(info) {
+        this.userInfo = {
+          isLoggedIn: true,
+          userId: info.id,
+          fullname: info.name,
+          permission: (info.is_launch_company) ? "company" : "user",
+        }
+      }
     },
   },
   created() {
