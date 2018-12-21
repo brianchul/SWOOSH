@@ -121,9 +121,6 @@ export default {
       this.boardView = false;
       this.$emit('openWindow');
     },
-    login: function() {
-      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    },
     logout: function() {
       this.userInfo = {
         isLoggedIn: false,
@@ -131,20 +128,21 @@ export default {
         fullname: '',
         permission: 'guest',
       }
-      localStorage.setItem('userInfo',JSON.stringify(this.userInfo))
-      localStorage.removeItem('userProfile')
+      localStorage.removeItem('userInfo')
     },
-    initUserInfo: function() {
-      localStorage.setItem('userInfo',JSON.stringify({
-        isLoggedIn: false,
-        userId: null,
-        fullname: '',
-        permission: 'guest',
-      }))
+    login: function() {
+      const info = JSON.parse(localStorage.getItem('userInfo'))
+      if(info) {
+        this.userInfo = {
+          isLoggedIn: true,
+          userId: info.id,
+          fullname: info.name,
+          permission: (info.is_launch_company) ? "company" : "user",
+        }
+      }
     },
   },
   created() {
-    this.initUserInfo();
     this.login();
   },
 }
