@@ -4,22 +4,28 @@
         <div class= 'separate'></div>
         <div class= 'wrapper'>
             <div class= 'flex_row'>
-                <div class= 'subtitle'>select year : </div>
+                <div class= 'subtitle'>Select Year : </div>
                 <input class='input' v-model="year"/>
                 <div class= "dropdown">
                     <div class= "dropbtn center"  @click="openContent=true">
                         <div class='triangle'></div>
                     </div>
                     <div class= "dropdown-content" :class="(openContent) ? 'open' : 'close'">
-                        <div v-for="n in 4 " :key="n+2014" @click='itemClick(n)'>{{ n+2014 }}</div>
+                        <div v-for="n in 15 " :key="n+2003" @click='itemClick(n)'>{{ n+2003 }}</div>
                     </div>
-                </div>  
+                </div> 
             </div>
         </div>
         <div class= "wrapper">
-            <div v-for="(data, index) in filterJson" :key="index">{{ data.rocket_name }} {{ data.launch_day}}</div>
+            <el-table class="table" :data="filterJson" stripe style="width: 80%" height="315" >
+                <el-table-column :span="4" prop="launch_day" width= "250" label="Launch Day" align= "center"></el-table-column>
+                <el-table-column prop="rocket_name" label="Name" width= "150" align= "left"></el-table-column>
+                <el-table-column prop="launch_location" label="Launch Location" align= "left"></el-table-column>
+            </el-table>
         </div>
     </div>
+    
+
 </template>
 
 <script>
@@ -38,15 +44,15 @@ export default {
     methods: {
         itemClick: function(n) {
             this.openContent = false;
-            this.year = n+2014;
-            var targetYear = this.year
+            this.year = n+2003;
+            var targetYear = this.year;
             this.filterJson = _.filter(this.initJson,function(payload) {
                 return (payload.launch_day.match(/.{1,4}/g)[0] === targetYear.toString())
             });
         },
+
     },
-    created() {
-    },
+    
 }
 </script>
 
@@ -165,5 +171,9 @@ export default {
     font-size: 18px;
     margin-top: 10px;
 }
+.table {
+    border-radius: 10px;
+}
+
 
 </style>

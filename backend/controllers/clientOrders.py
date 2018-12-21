@@ -7,6 +7,7 @@ from pkg.checkDictMatch import checkDictKeyMatchArray
 
 
 modelKey = [
+    "id",
     "satellite_name" ,
     "weight_kg" ,
     "purpose" ,
@@ -32,19 +33,14 @@ def FindAll():
 
 def FindOne(cond):
     try:
-        if "id" not in cond:
-            return None, 400
-        orderID = cond.pop("id")
-
         querydict, isMatch = checkDictKeyMatchArray(modelKey, cond)
-        if not isMatch:
+        if not isMatch or not 'id' in querydict:
             return None, 400
-        query = ClientOrders.query.filter_by(**querydict, id=orderID)
+        query = ClientOrders.query.filter_by(**querydict).one_or_none()
 
-        if query.one_or_none() is not None:
-            q = query.one_or_none()
-            q.__dict__.pop("_sa_instance_state")
-            return q.__dict__, 200
+        if query is not None:
+            query.__dict__.pop("_sa_instance_state")
+            return query.__dict__, 200
         else:
             return None, 404
     except InvalidRequestError:
@@ -74,14 +70,12 @@ def Create(cond):
 
 def Patch(content):
     try:
-        if not content['id']:
+        querydict, isMatch = checkDictKeyMatchArray(modelKey, content)
+        if not isMatch:
             return None, 400
         query = ClientOrders.query.filter_by(id=content.pop("id")).one_or_none()
         if query is not None:
-            querydict = {}
-            querydict, isMatch = checkDictKeyMatchArray(modelKey, content)
-            if not isMatch:
-                return None, 400
+            
             for key in querydict:
                 setattr(query, key, querydict[key])
             db_session.commit()
