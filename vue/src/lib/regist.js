@@ -3,7 +3,7 @@ import { config } from '../config'
 
 const API_HOST = config.API_HOST;
 
-export function postRegist(payload) {
+export function postRegist(payload,onSuccess,onFailed) {
     let uri = `${API_HOST}/client/register`;
     try {
         const res = request({
@@ -19,7 +19,16 @@ export function postRegist(payload) {
             },
             auth:false,
         });
-        console.log(res)
+        res.then(function(response) {
+            switch(response.data.code){
+                case 200:
+                    onSuccess();
+                    break;
+                case 401:
+                    onFailed();
+                    break;
+            }
+        })
     } catch (e) {
         console.log(e);
     }
