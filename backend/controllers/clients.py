@@ -115,5 +115,5 @@ def Delete(username):
         else:
             return 400
     except InvalidRequestError:
-        log().error("Unable to patch data")
+        log().error("Unable to delete data")
         return 400
