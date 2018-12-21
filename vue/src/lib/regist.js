@@ -12,6 +12,10 @@ export function postRegist(payload) {
             data: {
                 username: payload.username,
                 passwd: payload.password,
+                name: payload.fullname,
+                phone: payload.phone,
+                email: payload.email,
+                is_launch_company: (payload.permission === "company" ? true : false),
             },
             auth:false,
         });
