@@ -9,7 +9,7 @@
                         <span >*此欄位不能空</span>
                     </div>
                 </div>
-                <input  v-model="form.satellite_name" placehilder="請輸入" class="input"> 
+                <input  v-model="form.satellite_name" placeholder="請輸入" class="input"> 
             </div>
             <div class="field_four">
                 <div class="test">
@@ -18,7 +18,7 @@
                         <span >*此欄位不能空</span>
                     </div>
                 </div>    
-                <input  v-model="form.weight" placehilder="請輸入" class="input">
+                <input  v-model="form.weight" placeholder="請輸入" class="input">
             </div>
             <div class="dropdown">
                 <div class="test">
@@ -59,7 +59,7 @@
                         <span >*此欄位不能空</span>
                     </div>
                 </div>
-                <input  v-model="form.launchDate" placehilder="請輸入" class="input"> 
+                <input  v-model="form.launchDate" placeholder="請輸入" class="input"> 
             </div>
             <div class="field_four">
                 <div class="test">    
@@ -68,7 +68,7 @@
                         <span >*此欄位不能空</span>
                     </div>
                 </div>    
-                <input  v-model="form.budget" placehilder="請輸入" class="input"> 
+                <input  v-model="form.budget" placeholder="請輸入" class="input"> 
             </div>
             <div class="purpose ">
                 <label class="label-font" >目的</label>
