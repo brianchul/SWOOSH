@@ -6,8 +6,6 @@
         <div class='separate'></div>
         <List :payload='needList' listName='need'/>
         <List :payload='saleList' listName='sale'/>
-        <button class='testBtn center' @click='hello' v-if='userInfo.permission'> {{userInfo.permission}} Click</button>
-
     </div>
 </template>
 
@@ -151,15 +149,6 @@ export default {
         }
     },
     methods: {
-        hello: function() {
-            localStorage.setItem('alert',JSON.stringify({
-                hook: true,
-                status: 'success',
-                title: 'hi',
-                message: 'login first',
-            }))
-            this.$emit('setAlert')
-        }
     },
 }
 </script>

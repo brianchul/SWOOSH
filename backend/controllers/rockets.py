@@ -2,8 +2,18 @@ from sqlalchemy.exc import InvalidRequestError, IntegrityError
 from config.DBindex import db_session
 from models.rocket import Rockets
 from pkg.logger import get_logger as log
+from pkg.checkDictMatch import checkDictKeyMatchArray
 from datetime import datetime
 
+modelKey = [
+    "name",
+    "cost_billion",
+    "producer",
+    "build_date",
+    "max_payload_weight",
+    "max_reach_height",
+    "status"
+]
 
 def FindAll():
     try:
@@ -20,7 +30,15 @@ def FindAll():
 
 def FindOne(cond):
     try:
-        query = Rockets.query.filter_by(**cond)
+        if "id" not in cond:
+            return None, 400
+        orderID = cond.pop("id")
+
+        querydict, isMatch = checkDictKeyMatchArray(modelKey, cond)
+        if not isMatch:
+            return None, 400
+        query = Rockets.query.filter_by(**querydict, id=orderID)
+
         if query.one_or_none() is not None:
             q = query.one_or_none()
             q.__dict__.pop("_sa_instance_state")
@@ -33,7 +51,12 @@ def FindOne(cond):
 
 
 def Create(cond):
-    createLocation = Rockets(**cond, create_time=datetime.now())
+    querydict = {}
+    querydict, isMatch = checkDictKeyMatchArray(modelKey, cond)
+    if not isMatch:
+        return None, 400
+        
+    createLocation = Rockets(**querydict)
     
     try:
         db_session.add(createLocation)
@@ -47,16 +70,35 @@ def Create(cond):
         return 400
 
 
-def Patch(querys, content):
+def Patch(content):
     try:
-        query = Rockets.query.filter_by(name=querys).first()
+        if not content['id']:
+            return None, 400
+        query = Rockets.query.filter_by(id=content.pop("id")).one_or_none()
         if query is not None:
-            for key in content:
-                setattr(query, key, content[key])
+            querydict = {}
+            querydict, isMatch = checkDictKeyMatchArray(modelKey, content)
+            if not isMatch:
+                return None, 400
+            for key in querydict:
+                setattr(query, key, querydict[key])
+            db_session.commit()
+            return querydict, 200
+        else:
+            return None, 404
+    except InvalidRequestError:
+        log().error("Unable to patch data")
+        return None, 400
+
+def Delete(id):
+    try:
+        toDel = Rockets.query.filter_by(id=id).first()
+        if toDel is not None:
+            db_session.delete(toDel)
             db_session.commit()
             return 200
         else:
-            return 404
+            return 400
     except InvalidRequestError:
-        log().error("Unable to patch data")
+        log().error("Unable to delete data")
         return 400
