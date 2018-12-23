@@ -9,6 +9,6 @@ class Rockets(Base):
     cost_billion = Column(Float(3))
     producer = Column(String(50))
     build_date = Column(DateTime)
-    max_payload_weight = Column(Integer)
-    max_reach_height = Column(Integer)
+    rocket_max_payload_weight = Column(Integer)
+    rocket_max_reach_height = Column(Integer)
     status = Column(TEXT)
