@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Float
+from sqlalchemy import Column, Integer, String, DateTime, Float, TEXT
 from config.DBindex import Base
 
 
@@ -11,3 +11,4 @@ class Rockets(Base):
     build_date = Column(DateTime)
     max_payload_weight = Column(Integer)
     max_reach_height = Column(Integer)
+    status = Column(TEXT)
