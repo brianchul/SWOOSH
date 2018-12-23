@@ -2,8 +2,13 @@ from sqlalchemy.exc import InvalidRequestError, IntegrityError
 from config.DBindex import db_session
 from models.order import MissionOrders
 from pkg.logger import get_logger as log
+from pkg.checkDictMatch import checkDictKeyMatchArray
 from datetime import datetime
 
+modelKey = [
+    "order_id",
+    "mission_id"
+]
 
 def FindAll():
     try:
@@ -20,11 +25,14 @@ def FindAll():
 
 def FindOne(cond):
     try:
-        query = MissionOrders.query.filter_by(**cond)
-        if query.one_or_none() is not None:
-            q = query.one_or_none()
-            q.__dict__.pop("_sa_instance_state")
-            return q.__dict__, 200
+        querydict, isMatch = checkDictKeyMatchArray(modelKey, cond)
+        if not isMatch:
+            return None, 400
+
+        query = MissionOrders.query.filter_by(**querydict).one_or_none()
+        if query is not None:
+            query.__dict__.pop("_sa_instance_state")
+            return query.__dict__, 200
         else:
             return None, 404
     except InvalidRequestError:
@@ -33,7 +41,12 @@ def FindOne(cond):
 
 
 def Create(cond):
-    createClients = MissionOrders(**cond, create_time=datetime.now())
+    querydict = {}
+    querydict, isMatch = checkDictKeyMatchArray(modelKey, cond)
+    if not isMatch:
+        return None, 400
+
+    createClients = MissionOrders(**querydict)
     
     try:
         db_session.add(createClients)
@@ -47,16 +60,35 @@ def Create(cond):
         return 400
 
 
-def Patch(querys, content):
+def Patch(content):
     try:
-        query = MissionOrders.query.filter_by(id=querys).first()
+        if not content['id']:
+            return None, 400
+        query = MissionOrders.query.filter_by(id=content.pop("id")).one_or_none()
         if query is not None:
-            for key in content:
-                setattr(query, key, content[key])
+            querydict = {}
+            querydict, isMatch = checkDictKeyMatchArray(modelKey, content)
+            if not isMatch:
+                return None, 400
+            for key in querydict:
+                setattr(query, key, querydict[key])
+            db_session.commit()
+            return querydict, 200
+        else:
+            return None, 404
+    except InvalidRequestError:
+        log().error("Unable to patch data")
+        return None, 400
+
+def Delete(id):
+    try:
+        toDel = MissionOrders.query.filter_by(id=id).first()
+        if toDel is not None:
+            db_session.delete(toDel)
             db_session.commit()
             return 200
         else:
-            return 404
+            return 400
     except InvalidRequestError:
-        log().error("Unable to patch data")
+        log().error("Unable to delete data")
         return 400
