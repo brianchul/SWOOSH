@@ -36,10 +36,10 @@ def loginClient():
     resp, code = clients.Login(r)
     return warpResponse(resp, code)
 
-@client.route("/<name>", methods=['POST'])
-def patchClient(name):
+@client.route("/patch", methods=['POST'])
+def patchClient():
     r = request.get_json()
-    code = clients.Patch(name, r)
+    code = clients.Patch(r)
     return warpResponse(None, code)
 
 @client.route("/delete", methods=["POST"])

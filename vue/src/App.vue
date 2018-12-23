@@ -52,9 +52,12 @@ export default {
     setAlert: function() {
       this.resetAlert();
       setTimeout(() => {
+        this.alert.hook = false;
+      },3000);
+      setTimeout(() => {
         this.initAlert();
         this.resetAlert();
-      },3000);
+      },3500);
     },
   },
   created() {
@@ -143,10 +146,11 @@ body {
   bottom: -200px;
 }
 .alertBox {
+  flex-direction: column;
   width: 400px;
   height: 100px;
   border-radius: 20px;
-  background-color: #fff;
+  background-color: rgba(255,255,255,0.7);
 }
 .successStyle {
   box-shadow: 0 0 1em green;

@@ -5,7 +5,6 @@ from models import location, rocket, client
 
 class Missions(Base):
     __tablename__ = "mission"
-    id = Column(Integer, primary_key=True, autoincrement=True)
     price_condition = Column(String(2000))
     # join_start = Column(DateTime)
     # join_deadline = Column(DateTime)
