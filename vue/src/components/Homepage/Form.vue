@@ -35,13 +35,12 @@
                 </select>
             </div>
         </div>
-        <button type="submit" @click.prevent='apiTest(form)'>{{(status === 'login') ? '登入' : '註冊'}}</button>
+        <button type="submit" @click.prevent='api(form)'>{{(status === 'login') ? '登入' : '註冊'}}</button>
     </form>
 </template>
 
 <script>
 import api from '../../lib/' 
-import Homepage from '../Homepage.vue'
 
 export default {
     name: 'Form',
@@ -50,8 +49,6 @@ export default {
     },
     data() {
         return {
-            loginStatus: null, // true(succeed), false(failed), null(not login yet)
-            registStatus: null, // true(succeed), false(failed), null(not regist yet)
             form: {
                 username: '',
                 password: '',
@@ -64,32 +61,48 @@ export default {
         }
     },
     methods: {
-        setLogin: function() {
+        loginOnSuccess: function(data) {
+            localStorage.setItem('userInfo',JSON.stringify(data))
             this.$emit('setLogin');
             this.$emit('closeForm');
         },
-        setAlert: function() {
-            this.$emit('setAlert');
+        loginOnFailed: function() {
+            this.$message({
+                type: 'error',
+                message: "帳號或密碼錯誤，請重新輸入",
+                center: true
+            })
         },
-        apiTest: function(payload) {
+        registOnSuccess: function() {
+            this.$message({
+                type: 'success',
+                message: "註冊成功",
+                center: true
+            })
+            this.$emit('closeForm');
+        },
+        registOnFailed: function() {
+            this.$message({
+                type: 'error',
+                message: "註冊失敗，帳戶名稱已被註冊",
+                center: true
+            })
+        },
+        api: function(payload) {
             switch(this.status) {
                 case 'login':
-                    api.postLogin(payload,this.setLogin,this.setAlert);
+                    api.postLogin(payload,this.loginOnSuccess,this.loginOnFailed);
                     break;
                 case 'regist':
                     if(payload.checkPassword != payload.password){
-                        localStorage.setItem('alert',JSON.stringify({
-                            hook: true,
-                            status: 'fail',
-                            title: '操作失敗：',
-                            message: '密碼錯誤，請重新輸入',
-                        }))
-                        this.$emit('setAlert');
+                        this.$message({
+                            type: 'error',
+                            message: "密碼錯誤，請重新輸入",
+                            center: true
+                        })
                     } else {
-                        api.postRegist(payload);
-                        this.$emit('closeForm');
+                        api.postRegist(payload,this.registOnSuccess,this.registOnFailed);
                     }
-                    // api.postRegist(payload);
                     break;
             }
         },
