@@ -20,7 +20,7 @@ def getOneRocket():
     r = request.get_json()
     resp, code = rockets.FindOne(r)
     if resp is not None:
-        return warpResponse(resp)
+        return warpResponse(resp, code)
     else:
         return warpResponse(None, code)
 

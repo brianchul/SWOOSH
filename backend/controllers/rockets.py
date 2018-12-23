@@ -56,10 +56,10 @@ def Create(cond):
     if not isMatch:
         return None, 400
         
-    createLocation = Rockets(**querydict)
+    createRocket = Rockets(**querydict)
     
     try:
-        db_session.add(createLocation)
+        db_session.add(createRocket)
         db_session.commit()
         return 200
     except InvalidRequestError:
