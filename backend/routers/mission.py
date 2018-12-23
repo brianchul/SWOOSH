@@ -3,7 +3,7 @@ from controllers import missions
 from pkg.warpResponse import warpResponse
 
 
-mission = Blueprint('hello', __name__)
+mission = Blueprint('mission', __name__)
 
 
 @mission.route("/", methods=['GET'])
@@ -29,17 +29,20 @@ def getOneMission():
 def createMission():
     r = request.get_json()
     code = missions.Create(r)
-    if code is not None:
-        return warpResponse(None, code)
-    else:
-        return warpResponse(None, code)
+    return warpResponse(None, code)
 
 
-@mission.route("/<id>", methods=['POST'])
-def patchMission(id):
+@mission.route("/patch", methods=['POST'])
+def patchMissionOrder():
     r = request.get_json()
-    code = missions.Patch(id, r)
-    if code is not None:
-        return warpResponse(None, code)
+    resp, code = missions.Patch(r)
+    if resp is not None:
+        return warpResponse(resp, code)
     else:
         return warpResponse(None, code)
+
+@mission.route("/delete", methods=['POST'])
+def deleteMissionOrder():
+    r = request.get_json()
+    code = missions.Delete(r['id'])
+    return warpResponse(None, code)

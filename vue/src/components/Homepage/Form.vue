@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="afterSubmit($event)" class="formWrapper center">
+    <form class="formWrapper center">
         <div class="formItemWrapper">
             <div class='formItem'>
                 <label>帳號</label>
@@ -35,7 +35,7 @@
                 </select>
             </div>
         </div>
-        <button type="submit" @click='apiTest(form)'>{{(status === 'login') ? '登入' : '註冊'}}</button>
+        <button type="submit" @click.prevent='api(form)'>{{(status === 'login') ? '登入' : '註冊'}}</button>
     </form>
 </template>
 
@@ -49,8 +49,6 @@ export default {
     },
     data() {
         return {
-            loginStatus: null, // true(succeed), false(failed), null(not login yet)
-            registStatus: null, // true(succeed), false(failed), null(not regist yet)
             form: {
                 username: '',
                 password: '',
@@ -63,36 +61,50 @@ export default {
         }
     },
     methods: {
-        apiTest: function(payload) {
-            switch(this.status) {
-                case 'login':
-                    // api.postLogin({
-                    //     username: payload.username,
-                    //     password: payload.password,
-                    // });
-                    localStorage.setItem('userInfo',JSON.stringify({
-                        isLoggedIn: true,
-                        userId: null,
-                        fullname: 'Super Rocket',
-                        permission: payload.username,
-                    }))
-                    this.$emit('setLogin')
-                    //this.loginStatus = (payload.username === 'user' || payload.username === 'company')
-                    break;
-                case 'regist':
-                    // api.postRegist(payload);
-                    break;
-            }
-        },
-        afterSubmit: function(event) {
-            event.preventDefault();
+        loginOnSuccess: function(data) {
+            localStorage.setItem('userInfo',JSON.stringify(data))
+            this.$emit('setLogin');
             this.$emit('closeForm');
         },
-        loginSucceed: function() {
-            
+        loginOnFailed: function() {
+            this.$message({
+                type: 'error',
+                message: "帳號或密碼錯誤，請重新輸入",
+                center: true
+            })
         },
-        loginFailed: function() {
-
+        registOnSuccess: function() {
+            this.$message({
+                type: 'success',
+                message: "註冊成功",
+                center: true
+            })
+            this.$emit('closeForm');
+        },
+        registOnFailed: function() {
+            this.$message({
+                type: 'error',
+                message: "註冊失敗，帳戶名稱已被註冊",
+                center: true
+            })
+        },
+        api: function(payload) {
+            switch(this.status) {
+                case 'login':
+                    api.postLogin(payload,this.loginOnSuccess,this.loginOnFailed);
+                    break;
+                case 'regist':
+                    if(payload.checkPassword != payload.password){
+                        this.$message({
+                            type: 'error',
+                            message: "密碼錯誤，請重新輸入",
+                            center: true
+                        })
+                    } else {
+                        api.postRegist(payload,this.registOnSuccess,this.registOnFailed);
+                    }
+                    break;
+            }
         },
     }
 }
@@ -102,7 +114,7 @@ export default {
 .formWrapper {
   height: 70vh;
   width: 100%;
-  background-color: black;
+  background-image: url(../../assets/roc1.jpg);
 }
 .formItemWrapper {
   display: flex;
@@ -118,7 +130,7 @@ export default {
   text-align: center;
   width: 120px;
   padding-right: 10px;
-  color: #fff;
+  color: black;
   font-size: 18px;
 }
 .formItem input {
@@ -127,15 +139,15 @@ export default {
   border-radius: 5px;
   padding: 10px;
   background: transparent;
-  border: 2px solid #fff;
-  color: #fff;
+  border: 2px solid black;
+  color: black;
 }
 .formItem select {
   width: 200px;
   height: 40px;
   background: transparent;
-  border: 2px solid #fff;
-  color: #fff;
+  border: 2px solid black;
+  color: black;
   text-indent: 10px;
 }
 form button {

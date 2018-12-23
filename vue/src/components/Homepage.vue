@@ -21,7 +21,10 @@
             </div>
           </div>
           <div v-else class="formArea center">
-            <Form :status='status' @closeForm='status = "home"' @setLogin='login'/>
+            <Form :status='status'
+            @closeForm='status = "home"'
+            @setLogin='login'
+            @setAlert='$emit("setAlert")'/>
           </div>
         </div>
       </transition>
@@ -99,7 +102,6 @@ export default {
   },
   methods: {
     changeWindow: function(index) {
-      console.log(this.userInfo.isLoggedIn)
       if(!this.userInfo.isLoggedIn && index !== 'AboutUs' && index !== 'History') {
         localStorage.setItem('alert',JSON.stringify({
           hook: true,
@@ -119,9 +121,6 @@ export default {
       this.boardView = false;
       this.$emit('openWindow');
     },
-    login: function() {
-      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    },
     logout: function() {
       this.userInfo = {
         isLoggedIn: false,
@@ -129,19 +128,21 @@ export default {
         fullname: '',
         permission: 'guest',
       }
-      localStorage.setItem('userInfo',JSON.stringify(this.userInfo))
+      localStorage.removeItem('userInfo')
     },
-    initUserInfo: function() {
-      localStorage.setItem('userInfo',JSON.stringify({
-        isLoggedIn: false,
-        userId: null,
-        fullname: '',
-        permission: 'guest',
-      }))
+    login: function() {
+      const info = JSON.parse(localStorage.getItem('userInfo'))
+      if(info) {
+        this.userInfo = {
+          isLoggedIn: true,
+          userId: info.id,
+          fullname: info.name,
+          permission: (info.is_launch_company) ? "company" : "user",
+        }
+      }
     },
   },
   created() {
-    this.initUserInfo();
     this.login();
   },
 }

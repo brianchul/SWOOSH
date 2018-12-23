@@ -28,18 +28,24 @@ def getOneClient():
 @clientOrder.route("/add", methods=['POST'])
 def createClientOrder():
     r = request.get_json()
-    code = clientOrders.Create(r)
-    if code is not None:
-        return warpResponse(None, code)
+    resp, code = clientOrders.Create(r)
+    if resp is not None:
+        return warpResponse(resp, code)
     else:
         return warpResponse(None, code)
 
 
-@clientOrder.route("/<id>", methods=['POST'])
-def patchClient(id):
+@clientOrder.route("/patch", methods=['POST'])
+def patchClientOrder():
     r = request.get_json()
-    code = clientOrders.Patch(id, r)
-    if code is not None:
-        return warpResponse(None, code)
+    resp, code = clientOrders.Patch(r)
+    if resp is not None:
+        return warpResponse(resp, code)
     else:
         return warpResponse(None, code)
+
+@clientOrder.route("/delete", methods=['POST'])
+def deleteClientOrder():
+    r = request.get_json()
+    code = clientOrders.Delete(r['id'])
+    return warpResponse(None, code)

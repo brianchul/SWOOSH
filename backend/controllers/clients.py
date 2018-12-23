@@ -4,6 +4,7 @@ from config.DBindex import db_session
 from models.client import Clients
 from models.order import ClientOrders
 from pkg.logger import get_logger as log
+from pkg.checkDictMatch import checkDictKeyMatchArray
 from datetime import datetime
 
 pwd_context = CryptContext(
@@ -11,6 +12,13 @@ pwd_context = CryptContext(
         default="pbkdf2_sha256",
         pbkdf2_sha256__default_rounds=30000
 )
+modelKey = [
+    "name",
+    "phone",
+    "email",
+    "is_launch_company",
+    "username"
+]
 
 def encrypt_password(password):
     return pwd_context.encrypt(password)
@@ -56,7 +64,6 @@ def Login(content):
             if check_encrypted_password(passwd, q.passwd):
                 orders = ClientOrders.query.filter_by(request_by=query.one().id).all()
                 q.__dict__.pop("passwd")
-                q.__dict__.pop("id")
                 q.__dict__.pop("_sa_instance_state")
                 if orders is not None:
                     resp = q.__dict__
@@ -78,7 +85,10 @@ def Login(content):
 def Create(cond):
     passwd = encrypt_password(cond['passwd'])
     cond.pop('passwd')
-    createClients = Clients(**cond, passwd=passwd)
+    queryDict, isMatch = checkDictKeyMatchArray(modelKey, cond)
+    if not isMatch:
+        return None, 400
+    createClients = Clients(**queryDict, passwd=passwd)
     
     try:
         db_session.add(createClients)
@@ -92,12 +102,15 @@ def Create(cond):
         return 400
 
 
-def Patch(querys, content):
+def Patch(content):
     try:
-        query = Clients.query.filter_by(username=querys).first()
+        queryDict, isMatch = checkDictKeyMatchArray(modelKey, content)
+        if not isMatch:
+            return 400
+        query = Clients.query.filter_by(username=queryDict['username']).one_or_none()
         if query is not None:
-            for key in content:
-                setattr(query, key, content[key])
+            for key in queryDict:
+                setattr(query, key, queryDict[key])
             db_session.commit()
             return 200
         else:
@@ -116,5 +129,5 @@ def Delete(username):
         else:
             return 400
     except InvalidRequestError:
-        log().error("Unable to patch data")
+        log().error("Unable to delete data")
         return 400
