@@ -66,8 +66,13 @@ def Login(content):
                 q.__dict__.pop("passwd")
                 q.__dict__.pop("_sa_instance_state")
                 if orders is not None:
+                    tmp = []
+                    for num in range(len(orders)):
+                        tmpDict = orders[num].__dict__
+                        tmpDict.pop("_sa_instance_state")
+                        tmp.append(tmpDict)
                     resp = q.__dict__
-                    resp["orders"] = orders
+                    resp["orders"] = tmp
                 else:
                     resp = {**q.__dict__, "orders": "null"}
                 
