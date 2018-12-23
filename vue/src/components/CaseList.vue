@@ -6,12 +6,14 @@
         <div class='separate'></div>
         <List :payload='needList' listName='need'/>
         <List :payload='saleList' listName='sale'/>
+        <button @click='test'>click</button>
     </div>
 </template>
 
 <script>
 import List from './CaseList/List.vue'
 import api from '../lib/'
+import moment from 'moment'
 
 export default {
     name: 'CaseList',
@@ -23,6 +25,7 @@ export default {
     },
     data() {
         return {
+            needsList: [],
             needList: [
                 {
                     name: '福衛66號',
@@ -149,6 +152,25 @@ export default {
         }
     },
     methods: {
+        test: function() {
+            // api.getAllNeeds(this.onSuccess,this.onFailed)
+        },
+        onSuccess: function(data) {
+            data.map((item) => {
+                var date = moment(new Date(item.arrival_date),'ddd, DD MMM YYYY').format('YYYY/MM/DD')
+                console.log(date)
+            })
+        },
+        onFailed: function() {
+            this.$message({
+                type: 'error',
+                message: 'not found',
+                center: true,
+            })
+        }
+    },
+    created() {
+        api.getAllNeeds(this.onSuccess,this.onFailed)
     },
 }
 </script>
