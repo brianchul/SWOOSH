@@ -5,7 +5,7 @@
             <div class="field_four">
                 <div class="test">
                     <label class="label-font" >衛星名稱</label>
-                    <div v-if="valid.satellite_name" class="valid_warn">
+                    <div v-if="form.satellite_name === null" class="valid_warn">
                         <span >*此欄位不能空</span>
                     </div>
                 </div>
@@ -14,7 +14,7 @@
             <div class="field_four">
                 <div class="test">
                     <label class="label-font" >衛星重量（KG）</label>
-                    <div v-if="valid.weight" class="valid_warn">
+                    <div v-if="form.weight === null" class="valid_warn">
                         <span >*此欄位不能空</span>
                     </div>
                 </div>    
@@ -23,7 +23,7 @@
             <div class="dropdown">
                 <div class="test">
                     <label class="label-font" >發射高度 </label>
-                    <div v-if="valid.height" class="valid_warn">
+                    <div v-if="form.height === null" class="valid_warn">
                         <span  >*此欄位不能空</span>
                     </div>
                 </div>    
@@ -36,7 +36,7 @@
             <div class="dropdown">
                 <div class="test">  
                     <label class="label-font" >傾角</label>
-                    <div v-if="valid.inclination" class="valid_warn">
+                    <div v-if="form.inclination === null" class="valid_warn">
                         <span >*此欄位不能空</span>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
             <div class="field_four">
                 <div class="test">
                     <label class="label-font" >發射日期</label>
-                    <div v-if="valid.launchDate" class="valid_warn">
+                    <div v-if="form.launchDate === null" class="valid_warn">
                         <span >*此欄位不能空</span>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
             <div class="field_four">
                 <div class="test">    
                     <label class="label-font" >此次預算</label>
-                    <div v-if="valid.budget" class="valid_warn">
+                    <div v-if="form.budget === null" class="valid_warn">
                         <span >*此欄位不能空</span>
                     </div>
                 </div>    
