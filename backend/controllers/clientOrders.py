@@ -7,7 +7,6 @@ from pkg.checkDictMatch import checkDictKeyMatchArray
 
 
 modelKey = [
-    "id",
     "satellite_name" ,
     "weight_kg" ,
     "purpose" ,
@@ -26,21 +25,26 @@ def FindAll():
             data.__dict__.pop("_sa_instance_state")
             dataDict.append(data.__dict__)
         return dataDict, 200
-    except Exception as e:
-        log().error(e.message)
+    except :
+        log().error("clientOrder controller findall")
         return None, 404
 
 
 def FindOne(cond):
     try:
-        querydict, isMatch = checkDictKeyMatchArray(modelKey, cond)
-        if not isMatch or not 'id' in querydict:
+        if "id" not in cond:
             return None, 400
-        query = ClientOrders.query.filter_by(**querydict).one_or_none()
+        orderID = cond.pop("id")
 
-        if query is not None:
-            query.__dict__.pop("_sa_instance_state")
-            return query.__dict__, 200
+        querydict, isMatch = checkDictKeyMatchArray(modelKey, cond)
+        if not isMatch:
+            return None, 400
+        query = ClientOrders.query.filter_by(**querydict, id=orderID)
+
+        if query.one_or_none() is not None:
+            q = query.one_or_none()
+            q.__dict__.pop("_sa_instance_state")
+            return q.__dict__, 200
         else:
             return None, 404
     except InvalidRequestError:
@@ -70,12 +74,14 @@ def Create(cond):
 
 def Patch(content):
     try:
-        querydict, isMatch = checkDictKeyMatchArray(modelKey, content)
-        if not isMatch:
+        if not content['id']:
             return None, 400
         query = ClientOrders.query.filter_by(id=content.pop("id")).one_or_none()
         if query is not None:
-            
+            querydict = {}
+            querydict, isMatch = checkDictKeyMatchArray(modelKey, content)
+            if not isMatch:
+                return None, 400
             for key in querydict:
                 setattr(query, key, querydict[key])
             db_session.commit()
