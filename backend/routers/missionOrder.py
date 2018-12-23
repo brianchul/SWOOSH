@@ -35,11 +35,17 @@ def createMissionOrder():
         return warpResponse(None, code)
 
 
-@missionOrder.route("/<id>", methods=['POST'])
-def patchMissionOrder(id):
+@missionOrder.route("/patch", methods=['POST'])
+def patchMissionOrder():
     r = request.get_json()
-    code = missionOrders.Patch(id, r)
-    if code is not None:
-        return warpResponse(None, code)
+    resp, code = missionOrders.Patch(r)
+    if resp is not None:
+        return warpResponse(resp, code)
     else:
         return warpResponse(None, code)
+
+@missionOrder.route("/delete", methods=['POST'])
+def deleteMissionOrder():
+    r = request.get_json()
+    code = missionOrders.Delete(r['id'])
+    return warpResponse(None, code)
