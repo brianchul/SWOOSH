@@ -14,7 +14,9 @@ modelKey = [
     "eta_height_km" ,
     "arrival_date" ,
     "inclination" ,
-    "budget_billion" 
+    "budget_billion",
+    "launch_day",
+    "status"
 ]
 
 def FindAll():
