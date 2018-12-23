@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean, ForeignKey, TEXT
 from config.DBindex import Base
 from models import client, mission
 
@@ -13,6 +13,8 @@ class ClientOrders(Base):
     arrival_date = Column(DateTime)
     inclination = Column(String(50))
     budget_billion = Column(String(100))
+    launch_day = Column(DateTime)
+    status = Column(TEXT)
 
 
 class MissionOrders(Base):
