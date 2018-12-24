@@ -11,7 +11,9 @@ modelKey = [
     "limit_weight",
     "mission_arrival_deadline",
     "seat_price",
-    "status"
+    "status",
+    "request_by",
+    "weight_kg"
 ]
 
 def FindAll():
@@ -61,24 +63,22 @@ def Create(cond):
 
 
 def Patch(content):
-    try:
-        if not content['id']:
-            return None, 400
-        query = MissionOrders.query.filter_by(id=content.pop("id")).one_or_none()
-        if query is not None:
-            querydict = {}
-            querydict, isMatch = checkDictKeyMatchArray(modelKey, content)
-            if not isMatch:
-                return None, 400
-            for key in querydict:
-                setattr(query, key, querydict[key])
-            db_session.commit()
-            return querydict, 200
-        else:
-            return None, 404
-    except InvalidRequestError:
-        log().error("Unable to patch data")
+    log().debug(content)
+    if not content['id']:
         return None, 400
+    query = MissionOrders.query.filter_by(id=content.pop("id")).one_or_none()
+    if query is not None:
+        querydict = {}
+        querydict, isMatch = checkDictKeyMatchArray(modelKey, content)
+        if not isMatch:
+            return None, 400
+        for key in querydict:
+            setattr(query, key, querydict[key])
+        db_session.commit()
+        return querydict, 200
+    else:
+        return None, 404
+
 
 def Delete(id):
     try:
