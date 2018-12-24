@@ -14,6 +14,7 @@ class Missions(Base):
     target_inclination = Column(String(50))
     target_height_km = Column(String(50))
     create_by = Column(Integer, ForeignKey("client.id", use_alter=True))
+    pair_order = Column(Integer, ForeignKey("client_order.id", use_alter=True))
     rocket_max_payload_weight = Column(String(100))
 
 

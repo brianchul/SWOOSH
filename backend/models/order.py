@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean, ForeignKey, TEXT
+from sqlalchemy.orm import relationship
 from config.DBindex import Base
 from models import client, mission
 
@@ -15,11 +16,12 @@ class ClientOrders(Base):
     budget_billion = Column(String(100))
     launch_day = Column(DateTime)
     status = Column(TEXT)
+    relateMission = relationship("Missions")
 
 
 class MissionOrders(Base):
     __tablename__ = "mission_orders"
-    order_id = Column(Integer, ForeignKey("client_order.id", use_alter=True))
+    order_id = Column(Integer, ForeignKey("client.id", use_alter=True))
     mission_id = Column(Integer, ForeignKey("mission.id", use_alter=True))
     limit_weight = Column(String(100))
     mission_arrival_deadline = Column(DateTime)

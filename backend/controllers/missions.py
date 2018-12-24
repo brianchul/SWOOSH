@@ -13,6 +13,7 @@ modelKey = [
     "target_inclination",
     "target_height_km",
     "create_by",
+    "pair_order",
     "rocket_max_payload_weight"
 ]
 
@@ -54,23 +55,37 @@ def FindOne(cond):
 
 
 def Create(cond):
+    log().debug(cond)
     querydict = {}
     querydict, isMatch = checkDictKeyMatchArray(modelKey, cond)
     if not isMatch:
         return None, 400
 
-    createMission = Missions(**querydict)
-    
-    try:
-        db_session.add(createMission)
-        db_session.commit()
+    if "pair_order" in querydict:
+        pair = querydict.pop('pair_order')
+        pair = list(map(int, pair.split(',')))
+        for values in pair:
+            createMission = Missions(**querydict, pair_order=values)
+            try:
+                db_session.add(createMission)
+                db_session.commit()
+            except:
+                log().error("Unable to add mission with pair order in " + str(values))
+                return 400
         return 200
-    except InvalidRequestError:
-        log().error("Unable to create mission data")
-        return 400
-    except IntegrityError:
-        log().error("Foreign key not found")
-        return 400
+
+    else:
+        createMission = Missions(**querydict)
+        try:
+            db_session.add(createMission)
+            db_session.commit()
+            return 200
+        except InvalidRequestError:
+            log().error("Unable to create mission data")
+            return 400
+        except IntegrityError:
+            log().error("Foreign key not found")
+            return 400
 
 
 def Patch(content):
