@@ -12,7 +12,8 @@ modelKey = [
     "status",
     "target_inclination",
     "target_height_km",
-    "create_by"
+    "create_by",
+    "rocket_max_payload_weight"
 ]
 
 def FindAll():
