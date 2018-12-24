@@ -15,10 +15,10 @@ def getAllMissionOrder():
         return warpResponse(None, code)
 
 
-@missionOrder.route("/", methods=['POST'])
+@missionOrder.route("/findOne", methods=['POST'])
 def getOneMissionOrder():
     r = request.get_json()
-    resp, code = missionOrders.FindOne(r)
+    resp, code = missionOrders.FindOne(r['id'])
     if resp is not None:
         return warpResponse(resp)
     else:

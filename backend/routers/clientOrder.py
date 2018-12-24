@@ -15,12 +15,12 @@ def getAllClients():
         return warpResponse(None, code)
 
 
-@clientOrder.route("/", methods=['POST'])
+@clientOrder.route("/findOne", methods=['POST'])
 def getOneClient():
     r = request.get_json()
-    resp, code = clientOrders.FindOne(r)
+    resp, code = clientOrders.FindOne(r['id'])
     if resp is not None:
-        return warpResponse(resp)
+        return warpResponse(resp, code)
     else:
         return warpResponse(None, code)
 

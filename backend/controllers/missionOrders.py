@@ -29,11 +29,7 @@ def FindAll():
 
 def FindOne(cond):
     try:
-        querydict, isMatch = checkDictKeyMatchArray(modelKey, cond)
-        if not isMatch:
-            return None, 400
-
-        query = MissionOrders.query.filter_by(**querydict).one_or_none()
+        query = MissionOrders.query.filter_by(id=cond).one_or_none()
         if query is not None:
             query.__dict__.pop("_sa_instance_state")
             return query.__dict__, 200

@@ -15,7 +15,7 @@ def getAllTimelines():
         return warpResponse(None, code)
 
 
-@timeline.route("/", methods=['POST'])
+@timeline.route("/findOne", methods=['POST'])
 def getOneTimelines():
     r = request.get_json()
     if 'start' in r:
