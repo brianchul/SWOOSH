@@ -16,7 +16,6 @@ class ClientOrders(Base):
     budget_billion = Column(String(100))
     launch_day = Column(DateTime)
     status = Column(TEXT)
-    relateMission = relationship("Missions")
 
 
 class MissionOrders(Base):

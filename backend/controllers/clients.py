@@ -40,14 +40,14 @@ def FindAll():
         return None, 404
 
 
-def FindOne(username):
+def FindOne(ids):
     try:
-        query = Clients.query.filter_by(username=username)
+        query = Clients.query.filter_by(id=ids)
         if query.one_or_none() is not None:
-            """q = query.one_or_none()
+            q = query.one_or_none()
             q.__dict__.pop("_sa_instance_state")
-            q.__dict__.pop("passwd")"""
-            return None, 200
+            q.__dict__.pop("passwd")
+            return q.__dict__, 200
         else:
             return None, 404
     except InvalidRequestError:

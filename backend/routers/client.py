@@ -13,11 +13,11 @@ def getAllClients():
     return warpResponse(None, code)
 
 
-@client.route("/", methods=['POST'])
+@client.route("/findOne", methods=['POST'])
 def getOneClient():
     r = request.get_json()
     resp, code = clients.FindOne(r)
-    return warpResponse(None, code)
+    return warpResponse(resp, code)
 
 
 @client.route("/register", methods=['POST'])
