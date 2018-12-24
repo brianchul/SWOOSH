@@ -26,6 +26,8 @@ class MissionOrders(Base):
     mission_arrival_deadline = Column(DateTime)
     seat_price = Column(String(100))
     status = Column(TEXT)
+    weight_kg = Column(String(100))
+    request_by = Column(Integer, ForeignKey("client.id", use_alter=True))
 
 
 
