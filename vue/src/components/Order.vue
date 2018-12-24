@@ -119,16 +119,16 @@
       <div class="title2">。火箭</div>
       <el-table class="tbTitle" :data="showrocketData" key="Rocket" empty-text="目前無已上傳之火箭">
         <el-table-column type="expand">
-          <template slot-scope="props">
+          <!-- <template slot-scope="props">
             <el-form inline class="table-expand">
               <el-form-item label="已配對衛星：">
-                <span>{{ props.row.needList }}</span>
+                <span v-for="(item, index) in props.row.pair_order">{{item.satellite_name}}</span>
               </el-form-item>
-              <el-form-item label="已販售機位：">
+               <el-form-item label="已販售機位：">
                 <span>{{ props.row.saleList }}</span>
               </el-form-item>
             </el-form>
-          </template>
+          </template>  -->
         </el-table-column>
         <el-table-column label="火箭ID" prop="id"></el-table-column>
         <el-table-column label="火箭名稱" prop="launch_rocket"></el-table-column>
@@ -156,7 +156,7 @@
           <template slot-scope="props">
             <el-form inline class="table-expand">
               <el-form-item label="訂購者：">
-                <span>{{ props.row.order_id }}</span>
+                <span>{{ props.row.clientName }}</span>
               </el-form-item>
             </el-form>
           </template>
@@ -185,7 +185,7 @@
         </el-table-column>
       </el-table>
       <el-dialog title="火箭編輯" :visible.sync="RisActive">
-        <el-form :model="selectedlist" label-position="right" label-width="90px">
+        <el-form :model="selectedlist" label-position="right" label-width="150px">
           <el-form-item label="火箭名稱：">
             <el-input v-model="selectedlist.launch_rocket" autocomplete="off" clearable></el-input>
           </el-form-item>
@@ -219,6 +219,9 @@
               placeholder="請選擇日期"
             ></el-date-picker>
           </el-form-item>
+           <!-- <el-form-item label="已配對之衛星ID：">
+            <el-input v-model="selectedlist.pairOrderId" autocomplete="off" clearable></el-input>
+          </el-form-item>  -->
           <el-form-item label="狀態：">
             <el-switch v-model="selectedlist.status" active-text="開放中" inactive-text="關閉"></el-switch>
           </el-form-item>
@@ -229,7 +232,7 @@
         </div>
       </el-dialog>
       <el-dialog title="機位編輯" :visible.sync="SisActive">
-        <el-form :model="selectedSalelist" label-position="right" label-width="90px">
+        <el-form :model="selectedSalelist" label-position="right" label-width="150px">
           <el-form-item label="火箭ID：">
             <el-input v-model="selectedSalelist.mission_id" autocomplete="off" clearable></el-input>
           </el-form-item>
@@ -292,16 +295,18 @@ export default {
     const info = JSON.parse(localStorage.getItem("userInfo"));
     console.log(info);
     if (info.username === "user") {
-      this.needData = info.orders;
-      this.setNsale(info.orders);
+      api.getAllNeeds(this.selectNSuccess, this.getOnFailed);
+      const needInfo = JSON.parse(localStorage.getItem("needInfo"));
+      this.needData = needInfo;
+      this.setNsale(needInfo);
     } else {
-      api.getAllMission(this.selectMSuccess, this.patchOnFailed);
-      api.getAllMissionOrder(this.selectMOSuccess, this.patchOnFailed);
+      api.getAllMission(this.selectMSuccess, this.getOnFailed);
+      api.getAllMissionOrder(this.selectMOSuccess, this.getOnFailed);
       const missoninfo = JSON.parse(localStorage.getItem("missionInfo"));
       const missonOrderinfo = JSON.parse(
         localStorage.getItem("missionOrderInfo")
       );
-      console.log(missoninfo);
+      //console.log(missoninfo);
       this.setSrocket(missoninfo);
       this.setSsale(missonOrderinfo);
     }
@@ -317,6 +322,17 @@ export default {
           } else {
             element.status = false;
           }
+          //  if (element.pair_order != null) {
+          //    element.pair_order.forEach(o =>{
+          //      element.pairOrderId = JSON.stringify(o.id);
+          //      element.pairOrderId += ",";
+          //    })
+          //   //  api.getNeedById(element.pair_order,this.getNeedByIdSuccess, this.getOnFailed);
+          //   //  const getOneNeedInfo = JSON.parse(localStorage.getItem("getOneNeedInfo"));
+          //    console.log("pair_order:");
+          //    console.log(element.pairOrderId);
+          //    //element.satellite_name = getOneNeedInfo.satellite_name;
+          //  }
         });
       }
     },
@@ -340,6 +356,8 @@ export default {
         this.rocketData.push(arr);
       }
       this.setSrocket(this.showrocketData);
+      console.log("儲存");
+      console.log(arr);
       api.patchMission(arr, this.patchOnSuccess, this.patchOnFailed);
       this.changeOverlay();
     },
@@ -355,6 +373,13 @@ export default {
             element.status = true;
           } else {
             element.status = false;
+          }
+          if (element.order_id != null) {
+            api.getClientById(element.order_id,this.getClientByIdSuccess, this.getOnFailed);
+            const clientInfo = JSON.parse(localStorage.getItem("clientInfo"));
+            console.log("訂購人:");
+            console.log(clientInfo.name);
+            element.clientName = clientInfo.name;
           }
         });
       }
@@ -432,11 +457,27 @@ export default {
         center: true
       });
     },
+    getOnFailed: function() {
+      this.$message({
+        type: "error",
+        message: "取資料失敗，請重新確認",
+        center: true
+      });
+    },
     selectMSuccess: function(data) {
       localStorage.setItem("missionInfo", JSON.stringify(data));
     },
     selectMOSuccess: function(data) {
       localStorage.setItem("missionOrderInfo", JSON.stringify(data));
+    },
+    selectNSuccess: function(data) {
+      localStorage.setItem("needInfo", JSON.stringify(data));
+    },
+    getClientByIdSuccess: function(data) {
+      localStorage.setItem("clientInfo", JSON.stringify(data));
+    },
+    getNeedByIdSuccess: function(data) {
+      localStorage.setItem("getOneNeedInfo", JSON.stringify(data));
     },
     dateReviver: function(value) {
       if (typeof value === "string") {
