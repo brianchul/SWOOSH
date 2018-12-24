@@ -33,6 +33,7 @@ def FindAll():
         dataDict = []
         for data in query:
             data.__dict__.pop("_sa_instance_state")
+            data.__dict__.pop("passwd")
             dataDict.append(data.__dict__)
         return dataDict, 200
     except Exception as e:

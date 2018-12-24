@@ -38,32 +38,21 @@ def FindAll():
 
 def FindOne(cond):
     try:
-        if 'create_by' not in cond:
-            return None, 400
-        createBy = cond.pop('create_by')
-        querydict, isMatch = checkDictKeyMatchArray(modelKey, cond)
-        if not isMatch:
-            return None, 400
+        query = Missions.query.filter_by(id=cond).one_or_none()
+        if query is not None:
+            query.__dict__.pop("_sa_instance_state")
+            data = query.__dict__
 
-        query = Missions.query.filter_by(**querydict, create_by=createBy)
-        if query.one_or_none() is not None:
-            q = query.all()
-            dataDict = []
-            for data in q:
-                data.__dict__.pop("_sa_instance_state")
-                data = data.__dict__
+            queryPairOrder = MissionClientOrderRelate.query.filter_by(mission_id=cond).all()
+            qdataDict = []
+            for qdata in queryPairOrder:
+                clientOrder = ClientOrders.query.filter_by(id=qdata.clientOrder_id).one_or_none()
+                clientOrder = clientOrder.__dict__
+                clientOrder.pop("_sa_instance_state")
+                qdataDict.append(clientOrder)
 
-                queryPairOrder = MissionClientOrderRelate.query.filter_by(mission_id=data['id']).all()
-                qdataDict = []
-                for qdata in queryPairOrder:
-                    clientOrder = ClientOrders.query.filter_by(id=qdata.clientOrder_id).one_or_none()
-                    clientOrder = clientOrder.__dict__
-                    clientOrder.pop("_sa_instance_state")
-                    qdataDict.append(clientOrder)
-
-                data['pair_order'] = qdataDict
-                dataDict.append(data)
-            return dataDict, 200
+            data['pair_order'] = qdataDict
+            return data, 200
         else:
             return None, 404
     except InvalidRequestError:
@@ -123,9 +112,30 @@ def Patch(content):
             return None, 400
         query = Missions.query.filter_by(id=cid).one_or_none()
         if query is not None:
-            
+            if "pair_order" in querydict:
+                pair = list(map(int, querydict["pair_order"].split(',')))
+                relate = MissionClientOrderRelate.query.filter_by(mission_id=query.id).all()
+                qPair = []
+                for data in relate:
+                    qPair.append(data.clientOrder_id)
+
+                for toDel in list(set(qPair) - set(pair)):
+                    m = MissionClientOrderRelate.query.filter_by(mission_id=query.id, clientOrder_id=toDel).one()
+                    db_session.delete(m)
+                    
+                for toAdd in list(set(pair) - set(qPair)):
+                    createRelate = MissionClientOrderRelate(mission_id=query.id, clientOrder_id=toAdd)
+                    db_session.add(createRelate)
+
+                try:
+                    db_session.commit()
+                except:
+                    log().error("Unable to patch mission client order relate ")
+                    return 400
+
             for key in querydict:
                 setattr(query, key, querydict[key])
+
             db_session.commit()
             return querydict, 200
         else:
@@ -138,6 +148,11 @@ def Delete(id):
     try:
         toDel = Missions.query.filter_by(id=id).first()
         if toDel is not None:
+            delRelate = MissionClientOrderRelate.query.filter_by(mission_id=id).all()
+            for data in delRelate:
+                db_session.delete(data)
+            db_session.commit()
+            
             db_session.delete(toDel)
             db_session.commit()
             return 200
