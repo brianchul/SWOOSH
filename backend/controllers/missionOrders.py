@@ -7,7 +7,11 @@ from datetime import datetime
 
 modelKey = [
     "order_id",
-    "mission_id"
+    "mission_id",
+    "limit_weight",
+    "mission_arrival_deadline",
+    "seat_price",
+    "status"
 ]
 
 def FindAll():
@@ -19,7 +23,7 @@ def FindAll():
             dataDict.append(data.__dict__)
         return dataDict, 200
     except Exception as e:
-        log().error(e.message)
+        log().error("missionOrder findAll error")
         return None, 404
 
 

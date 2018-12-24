@@ -35,6 +35,6 @@ def init_db():
     Base.metadata.create_all(bind=engine)
 
 
-def drop_db():
-    from models import mission, client, timeline, order, rocket, location
-    Base.metadata.drop_all(bind=engine)
+# def drop_db():
+#     from models import mission, client, timeline, order, rocket, location
+#     Base.metadata.drop_all(bind=engine)
