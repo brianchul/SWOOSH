@@ -8,5 +8,6 @@ def checkDictKeyMatchArray(arrays, dicts):
             del dicts[key]
     if dicts:
         log().withPrefix("[dict]").debug(dicts)
+        log().withPrefix('[array]').debug(arrays)
         return None, False
     return querydict, True
