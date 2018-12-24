@@ -1,6 +1,7 @@
 from flask import request, Blueprint
 from controllers import missionOrders
 from pkg.warpResponse import warpResponse
+from pkg.logger import get_logger as log
 
 
 missionOrder = Blueprint('missionOrder', __name__)
@@ -38,6 +39,7 @@ def createMissionOrder():
 @missionOrder.route("/patch", methods=['POST'])
 def patchMissionOrder():
     r = request.get_json()
+    log().debug(r)
     resp, code = missionOrders.Patch(r)
     if resp is not None:
         return warpResponse(resp, code)
