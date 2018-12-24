@@ -87,6 +87,33 @@ export function getAllMissionOrder(onSuccess,onFailed) {
     }
 }
 
+export function postMissionOrder(payload,onSuccess,onFailed) {
+    let uri = `${API_HOST}/missionOrder/add`;
+    try {
+        console.log(payload)
+        const res = request({
+            uri,
+            method: 'POST',
+            data: payload,
+            auth:false,
+        });
+        res.then(function(response) {
+            let data = response.data.data
+            console.log(response);
+            switch(response.data.code){
+                case 200:
+                    onSuccess(data);
+                    break;
+                case 400:
+                    onFailed();
+                    break;
+            }
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 export function patchMissionOrder(payload,onSuccess,onFailed) {
     let uri = `${API_HOST}/missionOrder/patch`;
     try {
@@ -106,6 +133,32 @@ export function patchMissionOrder(payload,onSuccess,onFailed) {
                 launch_day:payload.launch_day,
                 status:payload.status 
             },
+            auth:false,
+        });
+        res.then(function(response) {
+            let data = response.data.data
+            console.log(response);
+            switch(response.data.code){
+                case 200:
+                    onSuccess(data);
+                    break;
+                case 400:
+                    onFailed();
+                    break;
+            }
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export function postMission(payload,onSuccess,onFailed) {
+    let uri = `${API_HOST}/mission/add`;
+    try {
+        const res = request({
+            uri,
+            method: 'POST',
+            data: payload,
             auth:false,
         });
         res.then(function(response) {
