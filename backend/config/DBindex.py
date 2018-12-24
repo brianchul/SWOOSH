@@ -4,7 +4,7 @@ from .conf import Config
 from flask_sqlalchemy import Model, DefaultMeta
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = create_engine(Config.db, echo=True)
+engine = create_engine(Config.db, echo=False)
 
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
