@@ -1,14 +1,13 @@
 from sqlalchemy.exc import InvalidRequestError, IntegrityError
 from config.DBindex import db_session
 from models.mission import Missions
+from models.rocket import Rockets
 from pkg.logger import get_logger as log
 from pkg.checkDictMatch import checkDictKeyMatchArray
 from datetime import datetime
 
 modelKey = [
-    "price_condition",
     "launch_date",
-    "launch_location",
     "launch_rocket",
     "status",
     "target_inclination",
@@ -21,6 +20,11 @@ def FindAll():
         query = Missions.query.all()
         dataDict = []
         for data in query:
+            if data.launch_rocket is not None:
+                queryRocket = Rockets.query.filter_by(name=data.launch_rocket).one_or_none()
+                queryRocket.__dict__.pop("_sa_instance_state")
+                queryRocket.__dict__.pop('id')
+                data.launch_rocket = [queryRocket.__dict__]
             data.__dict__.pop("_sa_instance_state")
             dataDict.append(data.__dict__)
         return dataDict, 200
@@ -38,8 +42,12 @@ def FindOne(cond):
         if not isMatch:
             return None, 400
         query = Missions.query.filter_by(**querydict).one_or_none()
-
         if query is not None:
+            if query.launch_rocket is not None:
+                queryRocket = Rockets.query.filter_by(name=query.launch_rocket).one_or_none()
+                queryRocket.__dict__.pop("_sa_instance_state")
+                queryRocket.__dict__.pop('id')
+                query.launch_rocket = [queryRocket.__dict__]
             query.__dict__.pop("_sa_instance_state")
             return query.__dict__, 200
         else:
