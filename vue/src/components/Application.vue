@@ -299,7 +299,7 @@ export default {
                 if(this.apiStatus.sale) {
                     var data = this.form.sale
                     payload = {
-                        order_id: info.id,
+                        order_id: null,
                         mission_id: data.missionId,
                         limit_weight: data.limitWeight,
                         mission_arrival_deadline: data.toFactoryDate,
