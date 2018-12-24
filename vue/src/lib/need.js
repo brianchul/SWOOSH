@@ -29,6 +29,31 @@ export function postNeed(payload,onSuccess,onFailed) {
     }
 }
 
+export function getAllNeeds(onSuccess,onFailed) {
+    let uri = `${API_HOST}/clientOrder`;
+    try {
+        const res = request({
+            uri,
+            method: 'GET',
+            auth: false,
+        });
+        res.then(function(response) {
+            let data = response.data.data
+            console.log(response.data);
+            switch(response.data.code){
+                case 200:
+                    onSuccess(data);
+                    break;
+                case 404:
+                    onFailed();
+                    break;
+            }
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 export function patchNeed(payload,onSuccess,onFailed) {
     let uri = `${API_HOST}/clientOrder/patch`;
     try {
@@ -52,12 +77,12 @@ export function patchNeed(payload,onSuccess,onFailed) {
         });
         res.then(function(response) {
             let data = response.data.data
-            console.log(response);
+            console.log(response.data);
             switch(response.data.code){
                 case 200:
                     onSuccess(data);
                     break;
-                case 400:
+                case 404:
                     onFailed();
                     break;
             }
@@ -66,4 +91,3 @@ export function patchNeed(payload,onSuccess,onFailed) {
         console.log(e);
     }
 }
-

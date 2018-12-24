@@ -55,10 +55,10 @@ export default {
         }
     },
     methods: {
-        onSort: function(key) {
-            console.log(key);
-        },
-    }
+        
+    },
+    created() {
+    },
 }
 </script>
 
