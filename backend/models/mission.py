@@ -13,10 +13,14 @@ class Missions(Base):
     status = Column(String(50))
     target_inclination = Column(String(50))
     target_height_km = Column(String(50))
-    create_by = Column(Integer, ForeignKey("client.id", use_alter=True))
-    pair_order = Column(Integer, ForeignKey("client_order.id", use_alter=True))
+    create_by = Column(Integer, ForeignKey("client.id", use_alter=True), nullable=False)
     rocket_max_payload_weight = Column(String(100))
 
+class MissionClientOrderRelate(Base):
+    __tablename__ = "mission_clientOrder_relation"
+
+    mission_id = Column(Integer, ForeignKey("mission.id", use_alter=True))
+    clientOrder_id = Column(Integer, ForeignKey("client_order.id", use_alter=True))
 
 '''    詢問Q： 可以共乘 合資的條件(高度軌道需求相同)
 火箭/衛星：名稱、發射時間 公斤數 高度 目的

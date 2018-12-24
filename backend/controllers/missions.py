@@ -1,7 +1,7 @@
 from sqlalchemy.exc import InvalidRequestError, IntegrityError
 from config.DBindex import db_session
-from models.mission import Missions
-from models.rocket import Rockets
+from models.mission import Missions, MissionClientOrderRelate
+from models.order import ClientOrders
 from pkg.logger import get_logger as log
 from pkg.checkDictMatch import checkDictKeyMatchArray
 from datetime import datetime
@@ -21,32 +21,49 @@ def FindAll():
     query = Missions.query.all()
     dataDict = []
     for data in query:
-        """if data.launch_rocket is not None:
-            queryRocket = Rockets.query.filter_by(name=data.launch_rocket).one_or_none()
-            queryRocket.__dict__.pop("_sa_instance_state")
-            queryRocket.__dict__.pop('id')
-            data.launch_rocket = [queryRocket.__dict__]"""
         data.__dict__.pop("_sa_instance_state")
-        dataDict.append(data.__dict__)
+        data = data.__dict__
+
+        queryPairOrder = MissionClientOrderRelate.query.filter_by(mission_id=data['id']).all()
+        qdataDict = []
+        for qdata in queryPairOrder:
+            clientOrder = ClientOrders.query.filter_by(id=qdata.clientOrder_id).one_or_none()
+            clientOrder = clientOrder.__dict__
+            clientOrder.pop("_sa_instance_state")
+            qdataDict.append(clientOrder)
+
+        data['pair_order'] = qdataDict
+        dataDict.append(data)
     return dataDict, 200
 
 def FindOne(cond):
     try:
-        if 'id' not in cond:
+        if 'create_by' not in cond:
             return None, 400
-        cond.pop('id')
+        createBy = cond.pop('create_by')
         querydict, isMatch = checkDictKeyMatchArray(modelKey, cond)
         if not isMatch:
             return None, 400
-        query = Missions.query.filter_by(**querydict).one_or_none()
-        if query is not None:
-            """if query.launch_rocket is not None:
-                queryRocket = Rockets.query.filter_by(name=query.launch_rocket).one_or_none()
-                queryRocket.__dict__.pop("_sa_instance_state")
-                queryRocket.__dict__.pop('id')
-                query.launch_rocket = [queryRocket.__dict__]"""
-            query.__dict__.pop("_sa_instance_state")
-            return query.__dict__, 200
+
+        query = Missions.query.filter_by(**querydict, create_by=createBy)
+        if query.one_or_none() is not None:
+            q = query.all()
+            dataDict = []
+            for data in q:
+                data.__dict__.pop("_sa_instance_state")
+                data = data.__dict__
+
+                queryPairOrder = MissionClientOrderRelate.query.filter_by(mission_id=data['id']).all()
+                qdataDict = []
+                for qdata in queryPairOrder:
+                    clientOrder = ClientOrders.query.filter_by(id=qdata.clientOrder_id).one_or_none()
+                    clientOrder = clientOrder.__dict__
+                    clientOrder.pop("_sa_instance_state")
+                    qdataDict.append(clientOrder)
+
+                data['pair_order'] = qdataDict
+                dataDict.append(data)
+            return dataDict, 200
         else:
             return None, 404
     except InvalidRequestError:
@@ -64,14 +81,22 @@ def Create(cond):
     if "pair_order" in querydict:
         pair = querydict.pop('pair_order')
         pair = list(map(int, pair.split(',')))
+        createMission = Missions(**querydict)
+        try:
+            db_session.add(createMission)
+            db_session.commit()
+        except:
+            log().error("Unable to add mission")
+            return 400
         for values in pair:
-            createMission = Missions(**querydict, pair_order=values)
+            createRelation = MissionClientOrderRelate(mission_id=createMission.id, clientOrder_id = values)
             try:
-                db_session.add(createMission)
+                db_session.add(createRelation)
                 db_session.commit()
             except:
-                log().error("Unable to add mission with pair order in " + str(values))
+                log().error("Unable to add mission clientOrder relation with id: " + str(values))
                 return 400
+
         return 200
 
     else:
