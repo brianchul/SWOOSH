@@ -67,27 +67,3 @@ export function patchNeed(payload,onSuccess,onFailed) {
     }
 }
 
-// export function getAllMission(onSuccess,onFailed) {
-//     let uri = `${API_HOST}/mission`;
-//     try {
-//         const res = request({
-//             uri,
-//             method: 'GET',
-//             auth:false,
-//         });
-//         res.then(function(response) {
-//             let data = response.data.data
-//             console.log(response);
-//             switch(response.data.code){
-//                 case 200:
-//                     onSuccess(data);
-//                     break;
-//                 case 400:
-//                     onFailed();
-//                     break;
-//             }
-//         })
-//     } catch (e) {
-//         console.log(e);
-//     }
-// }

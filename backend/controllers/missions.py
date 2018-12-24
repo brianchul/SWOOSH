@@ -12,26 +12,22 @@ modelKey = [
     "status",
     "target_inclination",
     "target_height_km",
-    "create_by"
+    "create_by",
+    "rocket_max_payload_weight"
 ]
 
 def FindAll():
-    try:
-        query = Missions.query.all()
-        dataDict = []
-        for data in query:
-            if data.launch_rocket is not None:
-                queryRocket = Rockets.query.filter_by(name=data.launch_rocket).one_or_none()
-                queryRocket.__dict__.pop("_sa_instance_state")
-                queryRocket.__dict__.pop('id')
-                data.launch_rocket = [queryRocket.__dict__]
-            data.__dict__.pop("_sa_instance_state")
-            dataDict.append(data.__dict__)
-        return dataDict, 200
-    except Exception as e:
-        log().error("missions controller findallError")
-        return None, 404
-
+    query = Missions.query.all()
+    dataDict = []
+    for data in query:
+        """if data.launch_rocket is not None:
+            queryRocket = Rockets.query.filter_by(name=data.launch_rocket).one_or_none()
+            queryRocket.__dict__.pop("_sa_instance_state")
+            queryRocket.__dict__.pop('id')
+            data.launch_rocket = [queryRocket.__dict__]"""
+        data.__dict__.pop("_sa_instance_state")
+        dataDict.append(data.__dict__)
+    return dataDict, 200
 
 def FindOne(cond):
     try:
@@ -43,11 +39,11 @@ def FindOne(cond):
             return None, 400
         query = Missions.query.filter_by(**querydict).one_or_none()
         if query is not None:
-            if query.launch_rocket is not None:
+            """if query.launch_rocket is not None:
                 queryRocket = Rockets.query.filter_by(name=query.launch_rocket).one_or_none()
                 queryRocket.__dict__.pop("_sa_instance_state")
                 queryRocket.__dict__.pop('id')
-                query.launch_rocket = [queryRocket.__dict__]
+                query.launch_rocket = [queryRocket.__dict__]"""
             query.__dict__.pop("_sa_instance_state")
             return query.__dict__, 200
         else:
