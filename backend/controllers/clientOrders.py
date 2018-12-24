@@ -34,14 +34,14 @@ def FindAll():
 
 def FindOne(cond):
     try:
-        if "id" not in cond:
+        """if "id" not in cond:
             return None, 400
         orderID = cond.pop("id")
 
         querydict, isMatch = checkDictKeyMatchArray(modelKey, cond)
         if not isMatch:
-            return None, 400
-        query = ClientOrders.query.filter_by(**querydict, id=orderID)
+            return None, 400"""
+        query = ClientOrders.query.filter_by(id=cond)
 
         if query.one_or_none() is not None:
             q = query.one_or_none()

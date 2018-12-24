@@ -15,7 +15,7 @@ def getAllRockets():
         return warpResponse(None, code)
 
 
-@rocket.route("/", methods=['POST'])
+@rocket.route("/findOne", methods=['POST'])
 def getOneRocket():
     r = request.get_json()
     resp, code = rockets.FindOne(r)
