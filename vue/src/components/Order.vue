@@ -2,7 +2,7 @@
   <div id="order">
     <div class="title">訂單管理</div>
     <template v-if="userInfo.permission === 'user'">
-      <el-table class="tbTitle" :data="showneedData" height="380" key="Need">
+      <el-table class="tbTitle" :data="showneedData" height="380" key="Need" empty-text="目前無已申請之訂單">
         <el-table-column type="expand">
           <template slot-scope="nprops">
             <el-form inline class="table-expand">
@@ -84,8 +84,12 @@
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="進廠日期：">
-            <el-date-picker v-model="selectedNeedlist.arrival_date" type="date" 
-              value-format="yyyy-MM-dd" placeholder="請選擇日期"></el-date-picker>
+            <el-date-picker
+              v-model="selectedNeedlist.arrival_date"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="請選擇日期"
+            ></el-date-picker>
           </el-form-item>
           <el-form-item label="預算：">
             <el-input v-model="selectedNeedlist.budget_billion" autocomplete="off" clearable></el-input>
@@ -113,7 +117,7 @@
     </template>
     <template v-else>
       <div class="title2">。火箭</div>
-      <el-table class="tbTitle" :data="showrocketData" key="Rocket">
+      <el-table class="tbTitle" :data="showrocketData" key="Rocket" empty-text="目前無已上傳之火箭">
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form inline class="table-expand">
@@ -147,7 +151,7 @@
         </el-table-column>
       </el-table>
       <div class="title2">。機位</div>
-      <el-table class="tbTitle" :data="showsaleData" key="Sale">
+      <el-table class="tbTitle" :data="showsaleData" key="Sale" empty-text="目前無已上傳之機位">
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form inline class="table-expand">
@@ -208,8 +212,12 @@
             <el-input v-model="selectedlist.rocket_max_payload_weight" autocomplete="off" clearable></el-input>
           </el-form-item>
           <el-form-item label="發射日期：">
-            <el-date-picker v-model="selectedlist.launch_date" type="date" 
-              value-format="yyyy-MM-dd" placeholder="請選擇日期"></el-date-picker>
+            <el-date-picker
+              v-model="selectedlist.launch_date"
+              type="date"
+              value-format="yyyy-MM-dd"
+              placeholder="請選擇日期"
+            ></el-date-picker>
           </el-form-item>
           <el-form-item label="狀態：">
             <el-switch v-model="selectedlist.status" active-text="開放中" inactive-text="關閉"></el-switch>
@@ -293,7 +301,7 @@ export default {
       const missonOrderinfo = JSON.parse(
         localStorage.getItem("missionOrderInfo")
       );
-      console.log(missonOrderinfo);
+      console.log(missoninfo);
       this.setSrocket(missoninfo);
       this.setSsale(missonOrderinfo);
     }
@@ -301,14 +309,23 @@ export default {
   methods: {
     setSrocket(arr) {
       this.showrocketData = JSON.parse(JSON.stringify(arr));
-      this.showrocketData.forEach(element => {
-        element.launch_date = this.dateReviver(element.launch_date);
-      });
+      if (this.showrocketData != null) {
+        this.showrocketData.forEach(element => {
+          element.launch_date = this.dateReviver(element.launch_date);
+          if (element.status == 1) {
+            element.status = true;
+          } else {
+            element.status = false;
+          }
+        });
+      }
     },
     showOverlay(index) {
       this.selected = index;
-      const missoninfo = JSON.parse(localStorage.getItem("missionInfo"));
-      this.selectedlist = JSON.parse(JSON.stringify(missoninfo[index]));
+      //const missoninfo = JSON.parse(localStorage.getItem("missionInfo"));
+      this.selectedlist = JSON.parse(
+        JSON.stringify(this.showrocketData[index])
+      );
       this.changeOverlay();
     },
     changeOverlay() {
@@ -329,19 +346,24 @@ export default {
 
     setSsale(arr) {
       this.showsaleData = JSON.parse(JSON.stringify(arr));
-      this.showsaleData.forEach(element => {
-        element.mission_arrival_deadline = this.dateReviver(
-          element.mission_arrival_deadline
-        );
-      });
+      if (this.showsaleData != null) {
+        this.showsaleData.forEach(element => {
+          element.mission_arrival_deadline = this.dateReviver(
+            element.mission_arrival_deadline
+          );
+          if (element.status == 1) {
+            element.status = true;
+          } else {
+            element.status = false;
+          }
+        });
+      }
     },
     showSaleOverlay(index) {
       this.selected = index;
-      const missonOrderinfo = JSON.parse(
-        localStorage.getItem("missionOrderInfo")
-      );
+      //const missonOrderinfo = JSON.parse(localStorage.getItem("missionOrderInfo"));
       this.selectedSalelist = JSON.parse(
-        JSON.stringify(missonOrderinfo[index])
+        JSON.stringify(this.showsaleData[index])
       );
       this.changeSaleOverlay();
     },
@@ -367,17 +389,18 @@ export default {
         element.arrival_date = this.dateReviver(element.arrival_date);
         element.launch_day = this.dateReviver(element.launch_day);
         element.created_time = this.dateReviver(element.created_time);
-        if(element.status == 1){
+        if (element.status == 1) {
           element.status = true;
-        }
-        else{
+        } else {
           element.status = false;
         }
       });
     },
     showNeedOverlay(index) {
       this.selected = index;
-      this.selectedNeedlist = JSON.parse(JSON.stringify(this.showneedData[index]));
+      this.selectedNeedlist = JSON.parse(
+        JSON.stringify(this.showneedData[index])
+      );
       this.changeNeedOverlay();
     },
     changeNeedOverlay() {
