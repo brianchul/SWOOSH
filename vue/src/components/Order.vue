@@ -294,7 +294,7 @@ export default {
   created() {
     const info = JSON.parse(localStorage.getItem("userInfo"));
     console.log(info);
-    if (info.username === "user") {
+    if (!info.is_launch_company) {
       api.getAllNeeds(this.selectNSuccess, this.getOnFailed);
       //const needInfo = JSON.parse(localStorage.getItem("needInfo"));
       //this.needData = needInfo;
