@@ -34,6 +34,44 @@
                         <div>
                             <img src="../assets/team1.jpg" width="100%" height="200px">
                         </div>
+                        <div class='center'>學名：許明欣</br>俗稱：歡樂送</div>    
+                    </div>
+                    <div class='member'>
+                        <div>
+                            <img src="../assets/team3.png" width="100%" height="200px">
+                        </div>
+                        <div>
+                            <div class='center'>學名：龎虞蓁</br>俗稱：小龎</div>
+                        </div>    
+                    </div>
+                    <div class='member'>
+                        <div>
+                            <img src="../assets/team4.jpg" width="100%" height="200px">
+                        </div>
+                        <div>
+                            <div class='center'>學名：李宗轅</br>俗稱：普渡</div>
+                        </div>    
+                    </div>
+                    <div class='member'>
+                        <div>
+                            <img src="../assets/team5.jpeg" width="100%" height="200px">
+                        </div>
+                        <div>
+                            <div class='center'>學名：葉哲欣</br>俗稱：鐵馬</div>
+                        </div>    
+                    </div>
+                    <div class='member'>
+                        <div>
+                            <img src="../assets/team6.png" width="100%" height="200px">
+                        </div>
+                        <div>
+                            <div class='center'>學名：林志軒</br>俗稱：小志</div>
+                        </div>    
+                    </div>
+                    <!--<div class='member center'>
+                        <div>
+                            <img src="../assets/team1.jpg" width="100%" height="200px">
+                        </div>
                         <div class='center'>超級箭前端長 許明欣</div>    
                     </div>
                     <div class='member'>
@@ -92,7 +130,7 @@
                         <div>
                             <div class='center'>超級箭自衛 黃耀德</div>
                         </div>    
-                    </div>
+                    </div>-->
                 </div>    
             </div>
         </div>       
