@@ -7,7 +7,13 @@ from datetime import datetime
 
 modelKey = [
     "order_id",
-    "mission_id"
+    "mission_id",
+    "limit_weight",
+    "mission_arrival_deadline",
+    "seat_price",
+    "status",
+    "request_by",
+    "weight_kg"
 ]
 
 def FindAll():
@@ -19,17 +25,13 @@ def FindAll():
             dataDict.append(data.__dict__)
         return dataDict, 200
     except Exception as e:
-        log().error(e.message)
+        log().error("missionOrder findAll error")
         return None, 404
 
 
 def FindOne(cond):
     try:
-        querydict, isMatch = checkDictKeyMatchArray(modelKey, cond)
-        if not isMatch:
-            return None, 400
-
-        query = MissionOrders.query.filter_by(**querydict).one_or_none()
+        query = MissionOrders.query.filter_by(id=cond).one_or_none()
         if query is not None:
             query.__dict__.pop("_sa_instance_state")
             return query.__dict__, 200
@@ -61,24 +63,22 @@ def Create(cond):
 
 
 def Patch(content):
-    try:
-        if not content['id']:
-            return None, 400
-        query = MissionOrders.query.filter_by(id=content.pop("id")).one_or_none()
-        if query is not None:
-            querydict = {}
-            querydict, isMatch = checkDictKeyMatchArray(modelKey, content)
-            if not isMatch:
-                return None, 400
-            for key in querydict:
-                setattr(query, key, querydict[key])
-            db_session.commit()
-            return querydict, 200
-        else:
-            return None, 404
-    except InvalidRequestError:
-        log().error("Unable to patch data")
+    log().debug(content)
+    if not content['id']:
         return None, 400
+    query = MissionOrders.query.filter_by(id=content.pop("id")).one_or_none()
+    if query is not None:
+        querydict = {}
+        querydict, isMatch = checkDictKeyMatchArray(modelKey, content)
+        if not isMatch:
+            return None, 400
+        for key in querydict:
+            setattr(query, key, querydict[key])
+        db_session.commit()
+        return querydict, 200
+    else:
+        return None, 404
+
 
 def Delete(id):
     try:

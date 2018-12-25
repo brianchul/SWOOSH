@@ -10,14 +10,14 @@ client = Blueprint('client', __name__)
 @client.route("/", methods=['GET'])
 def getAllClients():
     resp, code = clients.FindAll()
-    return warpResponse(None, code)
+    return warpResponse(resp, code)
 
 
-@client.route("/", methods=['POST'])
+@client.route("/findOne", methods=['POST'])
 def getOneClient():
     r = request.get_json()
-    resp, code = clients.FindOne(r)
-    return warpResponse(None, code)
+    resp, code = clients.FindOne(r['id'])
+    return warpResponse(resp, code)
 
 
 @client.route("/register", methods=['POST'])
