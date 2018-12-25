@@ -296,19 +296,18 @@ export default {
     console.log(info);
     if (info.username === "user") {
       api.getAllNeeds(this.selectNSuccess, this.getOnFailed);
-      const needInfo = JSON.parse(localStorage.getItem("needInfo"));
-      this.needData = needInfo;
-      this.setNsale(needInfo);
+      //const needInfo = JSON.parse(localStorage.getItem("needInfo"));
+      //this.needData = needInfo;
     } else {
       api.getAllMission(this.selectMSuccess, this.getOnFailed);
       api.getAllMissionOrder(this.selectMOSuccess, this.getOnFailed);
-      const missoninfo = JSON.parse(localStorage.getItem("missionInfo"));
-      const missonOrderinfo = JSON.parse(
-        localStorage.getItem("missionOrderInfo")
-      );
+      // const missoninfo = JSON.parse(localStorage.getItem("missionInfo"));
+       const missonOrderinfo = JSON.parse(
+         localStorage.getItem("missionOrderInfo")
+       );
       //console.log(missoninfo);
-      this.setSrocket(missoninfo);
-      this.setSsale(missonOrderinfo);
+      // this.setSrocket(missoninfo);
+       this.setSsale(missonOrderinfo);
     }
   },
   methods: {
@@ -465,13 +464,24 @@ export default {
       });
     },
     selectMSuccess: function(data) {
-      localStorage.setItem("missionInfo", JSON.stringify(data));
+      //localStorage.setItem("missionInfo", JSON.stringify(data));
+      this.rocketData = JSON.parse(JSON.stringify(data));
+      console.log("rocketData");
+      this.setSrocket(this.rocketData);
     },
     selectMOSuccess: function(data) {
       localStorage.setItem("missionOrderInfo", JSON.stringify(data));
+      // this.saleData = JSON.parse(JSON.stringify(data));
+      // console.log("saleData");
+      // this.setSsale(this.saleData);
     },
     selectNSuccess: function(data) {
-      localStorage.setItem("needInfo", JSON.stringify(data));
+      // console.log("資料庫回傳");
+      // console.log(data);
+      //localStorage.setItem(this.needData, JSON.parse(JSON.stringify(data)));
+      this.needData = JSON.parse(JSON.stringify(data));
+      console.log("needData");
+      this.setNsale(this.needData);
     },
     getClientByIdSuccess: function(data) {
       localStorage.setItem("clientInfo", JSON.stringify(data));
