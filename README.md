@@ -10,6 +10,8 @@ A matching interface for small company or personal sattelite to rocket company
 * [vue.js](https://vuejs.org) - The Progressive JavaScript Framework.
 * [moment](https://momentjs.com) - Parse, validate, manipulate, and display dates and times in JavaScript.
 * [elementUI](http://element-cn.eleme.io/#/en-US) - Element, a Vue 2.0 based component library for developers, designers and product managers.
+* [lodash](https://lodash.com) - A modern JavaScript utility library delivering modularity, performance & extras.
+* [axios](https://github.com/axios/axios) - Promise based HTTP client for the browser and node.js
 
 ## Authors
 
