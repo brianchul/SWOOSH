@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { request } from './api'
 import { config } from '../config/'
 
@@ -14,7 +15,6 @@ export function postNeed(payload,onSuccess,onFailed) {
         });
         res.then(function(response) {
             let data = response.data.data
-            console.log(response);
             switch(response.data.code){
                 case 200:
                     onSuccess(data);
@@ -39,7 +39,6 @@ export function getAllNeeds(onSuccess,onFailed) {
         });
         res.then(function(response) {
             let data = response.data.data
-            console.log(response.data);
             switch(response.data.code){
                 case 200:
                     onSuccess(data);
@@ -67,7 +66,7 @@ export function getNeedById(payload,onSuccess,onFailed) {
         });
         res.then(function(response) {
             let data = response.data.data
-            console.log(response);
+            console.log(data)
             switch(response.data.code){
                 case 200:
                     onSuccess(data);
@@ -105,7 +104,6 @@ export function patchNeed(payload,onSuccess,onFailed) {
         });
         res.then(function(response) {
             let data = response.data.data
-            console.log(response.data);
             switch(response.data.code){
                 case 200:
                     onSuccess(data);
