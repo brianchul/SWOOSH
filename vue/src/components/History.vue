@@ -23,7 +23,7 @@
                 :data="filterJson" 
                 :default-sort = "{prop: 'launch_day', order: 'descending'}" 
                 style="width: 80%" 
-                height="315" >
+                height="450" >
                 <el-table-column type="expand">
                     <template slot-scope="props">
                         <p>Purpose : {{ props.row.mission_discription }}</p>
