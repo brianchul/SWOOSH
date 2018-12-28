@@ -29,3 +29,7 @@ def not_found(error):
 @app.before_request
 def befReq():
     db_session.rollback()
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()

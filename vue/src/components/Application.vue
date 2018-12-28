@@ -1,188 +1,42 @@
 <template>
-   
-   
-    
-    
-    <div  v-if="use_status='user' ">
+    <div v-if='userInfo.permission === "user"' >
       <div class="title font-stytle"> 發射申請 </div>
-      
-        <form class="fields ">
-            <div class="field_third">
-                
+            <form class="fields ">
+                <div class="field_four">
                     <div class="test">
-                        <label class="label-font"  >申請單位</label>
-                        <div v-if="valid.applier" class="valid_warn">
-                            <span >*此欄位不能空</span>
-                        </div>
+                        <label class="label-font">衛星名稱
+                            <div v-if="form.need.satellite_name==null" class="valid_warn">*此欄位不能空</div>
+                        </label>
                     </div>
-                    <input  v-model="form.applier"   placehilder="請輸入" class="input"  > 
-                
-            </div>
-            <div class="field_third">
-                <div class="test">
-                    <label class="label-font" >電話號碼</label>
-                    <div v-if="valid.phone" class="valid_warn">
-                        <span >*此欄位不能空</span>
-                    </div>
+                    <input  v-model="form.need.satellite_name" placeholder="請輸入" class="input"/> 
                 </div>
-                <input  v-model="form.phone" placehilder="請輸入" class="input"> 
-            </div>
-            <div class="field_third">
-                <div class="test">
-                    <label class="label-font" >E-MAIL</label>
-                    <div v-if="valid.email" class="valid_warn">
-                        <span >*此欄位不能空</span>
-                    </div>
+                <div class="field_four">
+                    <div class="test">
+                        <label class="label-font" >衛星重量（KG）
+                            <div v-if="form.need.weight==null" placeholder="請輸入" class="valid_warn">*此欄位不能空</div>
+                        </label>
+                    </div>    
+                    <input  v-model="form.need.weight" placeholder="請輸入" class="input"/>
                 </div>
-                <input  v-model="form.email" placehilder="請輸入" class="input"> 
-                
-            </div>
-            <div class="field_four">
-                <div class="test">
-                    <label class="label-font" >衛星名稱</label>
-                    <div v-if="valid.satellite_name" class="valid_warn">
-                        <span >*此欄位不能空</span>
-                    </div>
+                <div class="dropdown">
+                    <div class="test">
+                        <label class="label-font" >發射高度 
+                            <div v-if="form.need.height==null"  placeholder="請輸入" class="valid_warn">*此欄位不能空</div>
+                        </label>
+                    </div>    
+                    <select v-model="form.need.height" class="input" style="height:60px; width:250px;" >
+                        <option value="LEO"> 低軌道LEO </option>
+                        <option value="MEO"> 中軌道MEO </option>
+                        <option value="GEO"> 高軌道HEO </option>
+                    </select>
                 </div>
-                <input  v-model="form.satellite_name" placehilder="請輸入" class="input"> 
-                
-            </div>
-            <div class="field_four">
-                <div class="test">
-                    <label class="label-font" >衛星重量（KG）</label>
-                    <div v-if="valid.weight" class="valid_warn">
-                        <span >*此欄位不能空</span>
+                <div class="dropdown">
+                    <div class="test">  
+                        <label class="label-font" >傾角
+                            <div v-if="form.need.inclination==null" class="valid_warn">*此欄位不能空</div>
+                        </label>
                     </div>
-                </div>    
-                <input  v-model="form.weight" placehilder="請輸入" class="input"> 
-            
-            </div>
-            <div class="dropdown">
-                <div class="test">
-                    <label class="label-font" >發射高度 </label>
-                    <div v-if="valid.height" class="valid_warn">
-                        <span  >*此欄位不能空</span>
-                    </div>
-                </div>    
-                <select v-model="form.height" class="input" style="height:60px; width:250px;" >
-                    <option value="LEO"> 低軌道LEO </option>
-                    <option value="MEO"> 中軌道MEO </option>
-                    <option value="GEO"> 高軌道HEO </option>
-                </select>
-                
-            </div>
-            <div class="dropdown">
-                <div class="test">  
-                    <label class="label-font" >傾角</label>
-                    <div v-if="valid.inclination" class="valid_warn">
-                        <span >*此欄位不能空</span>
-                    </div>
-                </div>
-                <select v-model="form.inclination" class="input" style="height:60px; width:250px;" >
-                    <option value="5~14">5~14度</option>
-                    <option value="15~24">15~24度</option>
-                    <option value="25~34">25~34度</option>
-                    <option value="35~44">35~44度</option>
-                    <option value="45~54">45~54度</option>
-                    <option value="55~64">55~64度</option>
-                    <option value="65~74">65~74度</option>
-                    <option value="75~85">75~85度</option>
-                </select>
-                
-            </div>
-            <div class="field_third">
-                <div class="test">
-                    <label class="label-font" >發射日期</label>
-                    <div v-if="valid.launchDate" class="valid_warn">
-                        <span >*此欄位不能空</span>
-                    </div>
-                </div>
-                <input  v-model="form.launchDate" placehilder="請輸入" class="input"> 
-            </div>
-            <div class="field_third">
-                <div class="test">
-                    <label class="label-font" >進場日期</label>
-                    <div v-if="valid.toFactoryDate" class="valid_warn">
-                        <span >*此欄位不能空</span>
-                    </div>
-                </div>    
-                <input  v-model="form.toFactoryDate" placehilder="請輸入" class="input"> 
-            </div>
-            <div class="field_third">
-                <div class="test">    
-                    <label class="label-font" >此次預算</label>
-                    <div v-if="valid.budget" class="valid_warn">
-                        <span >*此欄位不能空</span>
-                    </div>
-                </div>    
-                <input  v-model="form.budget" placehilder="請輸入" class="input"> 
-            </div>
-            <div class="purpose ">
-                <label class="label-font" >目的</label>
-                <textarea v-model="form.purpose" type=text class="input" style="height:200px;" >
-                </textarea>
-            </div>
-            <div class="button_function" >
-                <button @click.prevent="submit" class="submit">提交</button>
-                <button class="submit" >清除</button>
-            </div>
-            
-        </form>
-      
-    </div>
-
-
-     <div v-else-if='use_status.company'>
-        <div class="title font-stytle"> 任務清單 </div>
-         
-        <form class="fields ">
-                
-            <div class="field_third" >
-                
-                <div>    
-                    <label class="label-font" >火箭名稱</label>
-                    <div v-if="valid_company.rocketName" class="valid_warn">
-                        <span >*此欄位不能空</span>
-                    </div>
-                </div>
-            
-                <input  v-model="form_company.rocketName" placehilder="請輸入" class="input" style="height:55px;">    
-            </div>
-        
-            <div class="field_third">
-                <div >
-                    <label class="label-font" >發射高度</label>
-                    <div v-if="valid_company.height" class="valid_warn">
-                        <span >*此欄位不能空</span>
-                    </div>
-                </div>
-                <select v-model="form_company.height" class="input" style="height:60px; " >
-                    <option value="LEO"> 低軌道LEO </option>
-                    <option value="MEO"> 中軌道MEO </option>
-                    <option value="GEO"> 高軌道HEO </option>
-                </select>
-            </div>
-
-            <div class="field_third" >
-                
-                <div>    
-                    <label class="label-font" >總負重量</label>
-                    <div v-if="valid_company.totalWeight" class="valid_warn">
-                        <span >*此欄位不能空</span>
-                    </div>
-                </div>
-            
-                <input  v-model="form_company.totalWeight" placehilder="請輸入" class="input" style="height:55px;">    
-            </div>
-            
-            <div class="field_third" >
-                <div >  
-                    <label class="label-font" >傾角</label>
-                    <div v-if="valid_company.inclination" class="valid_warn">
-                        <span >*此欄位不能空</span>
-                    </div>
-                </div>
-                <select v-model="form_company.inclination" class="input" style="height:60px; "  >
+                    <select v-model="form.need.inclination" class="input" style="height:60px; width:250px;" >
                         <option value="5~14">5~14度</option>
                         <option value="15~24">15~24度</option>
                         <option value="25~34">25~34度</option>
@@ -191,79 +45,133 @@
                         <option value="55~64">55~64度</option>
                         <option value="65~74">65~74度</option>
                         <option value="75~85">75~85度</option>
-                </select>
-               
-            </div>
-            <div class="field_third" >
-                
-                <div>    
-                    <label class="label-font" >發射日期</label>
-                    <div v-if="valid_company.launchDate" class="valid_warn">
-                        <span >*此欄位不能空</span>
-                    </div>
+                    </select>
+                    
                 </div>
-            
-                <input  v-model="form_company.launchDate" placehilder="請輸入" class="input" style="height:55px;">    
-            </div>
-            
-
-        </form>
-        <div class="button_function" style="margin-left:10px" >
-                <button @click.prevent="submit" class="submit">提交</button>
-                <button class="submit" >清除</button>
-            </div>
-        
-    </div>
-
-    <div v-else-if='use_status.sale'>
-        <div class="title font-stytle center"> 火箭詳細資料 </div>
-        <form class="fields">
-            <div class="field_two">
-              
-                 <label class="label-font"  >發射計畫名稱</label>
-                <select v-model="form_sale.rocketName" class="input" style=" height:600px;padding:0px; "  >
-                    <option value="">請選擇火箭</option>
-                </select>
-                
-            </div>
-
-            <div class="field_two ">    
-                    <label class="label-font" >限制重量</label>
-                    <div v-if="valid_sale.limitWeight" class="valid_warn">
-                        <span >*此欄位不能空</span>
+                <div class="field_four">
+                    <div class="test">
+                        <label class="label-font" >發射日期
+                            <div v-if="form.need.launchDate==null" class="valid_warn">*此欄位不能空</div>
+                        </label>
                     </div>
-
-                     <input  v-model="form_sale.limitWeight" placehilder="請輸入" class="input" style="height:55px;">  
-            </div>
-            <div class="field_two">    
-                    <label class="label-font" >最後進場日期</label>
-                    <div v-if="valid_sale.toFactoryDate" class="valid_warn">
-                        <span >*此欄位不能空</span>
+                    <input  v-model="form.need.launchDate" placeholder="請輸入" class="input"/> 
+                </div>
+                <div class="field_four">
+                    <div class="test">
+                        <label class="label-font" >進場日期
+                            <div v-if="form.need.toFactoryDate==null" class="valid_warn">*此欄位不能空</div>
+                        </label>
                     </div>
-
-                     <input  v-model="form_sale.toFactoryDate" placehilder="請輸入" class="input" style="height:55px;">  
-            </div>
-            
-            <div class="field_two ">    
-                    <label class="label-font" >價錢</label>
-                    <div v-if="valid_sale.price" class="valid_warn">
-                        <span >*此欄位不能空</span>
-                    </div>
-
-                     <input  v-model="form_sale.price" placehilder="請輸入" class="input" style="height:55px;">  
-            </div>
-        </form>
-        <div class="button_function" style="margin-left:10px" >
-                <button @click.prevent="submit" class="submit">提交</button>
-                <button class="submit" >清除</button>
+                    <input  v-model="form.need.toFactoryDate" placeholder="請輸入" class="input"/> 
+                </div>
+                <div class="field_four">
+                    <div class="test">    
+                        <label class="label-font" >此次預算
+                            <div v-if="form.need.budget==null" class="valid_warn">*此欄位不能空</div>
+                        </label>
+                    </div>    
+                    <input  v-model="form.need.budget" placeholder=" 請輸入" class="input"/> 
+                </div>
+                <div class="purpose ">
+                    <label class="label-font" >目的</label>
+                    <textarea v-model="form.need.purpose" type=text class="input" style="height:200px;" >
+                    </textarea>
+                </div>
+                <div class="button_function center" >
+                    <button @click.prevent="submit" class="submit">提交</button>
+                </div>
+            </form>
         </div>
-        
     </div>
 
-  
+    <div v-else-if='userInfo.permission="company"'>
+        <div class="title font-stytle center">
+            <div :class='(change==="mission") ? "selected" : "noSelected" ' class='missionSelector center' @click.prevent="test('mission')">任務</div>
+            <div :class='(change==="sale") ? "selected" : "noSelected" ' class='saleSelector center' @click.prevent="test('sale')">機位</div>
+        </div>
+        <div v-if='change === "mission"'>
+            <form class="fields ">
+                <div class="field_third" >
+                    <label class="label-font" >火箭名稱
+                        <div v-if="form.mission.rocketName==null" class="valid_warn">*此欄位不能空</div>
+                    </label>
+                    <input  v-model="form.mission.rocketName" placeholder="請輸入" class="input" style="height:55px;"/>    
+                </div>
+                <div class="field_third">
+                    <label class="label-font" >發射高度
+                        <div v-if="form.mission.height==null" class="valid_warn">*此欄位不能空</div>
+                    </label>
+                    <select v-model="form.mission.height" class="input" style="height:60px; " >
+                        <option value="LEO"> 低軌道LEO </option>
+                        <option value="MEO"> 中軌道MEO </option>
+                        <option value="GEO"> 高軌道HEO </option>
+                    </select>
+                </div>
+                <div class="field_third" >
+                    <label class="label-font" >總負重量
+                        <div v-if="form.mission.totalWeight==null" class="valid_warn">*此欄位不能空</div>
+                    </label>
+                    <input  v-model="form.mission.totalWeight" placeholder="請輸入" class="input" style="height:55px;"/>    
+                </div>
+                <div class="field_third" >
+                    <label class="label-font" >傾角
+                        <div v-if="form.mission.inclination==null" class="valid_warn">*此欄位不能空</div>
+                    </label>
+                    <select v-model="form.mission.inclination" class="input" style="height:60px; "  >
+                        <option value="5~14">5~14度</option>
+                        <option value="15~24">15~24度</option>
+                        <option value="25~34">25~34度</option>
+                        <option value="35~44">35~44度</option>
+                        <option value="45~54">45~54度</option>
+                        <option value="55~64">55~64度</option>
+                        <option value="65~74">65~74度</option>
+                        <option value="75~85">75~85度</option>
+                    </select>
+                </div>
+                <div class="field_third" >
+                    <label class="label-font" >發射日期
+                        <div v-if="form.mission.launchDate==null" class="valid_warn">*此欄位不能空</div>
+                    </label>
+                    <input  v-model="form.mission.launchDate" placeholder="請輸入" class="input" style="height:55px;"/>    
+                </div>
+            </form>
+        </div>
+        <div v-else-if='change === "sale"'>
+            <form class="fields">
+                <div class="field_two">
+                    <label class="label-font">發射計畫名稱</label>
+                    <select v-model="form.sale.missionId" class="input">
+                        <option v-for='item in rocketItems' :value='item.id' :key='item.id'>{{item.launch_rocket}}</option>
+                    </select>
+
+                </div>
+                <div class="field_two ">    
+                    <label class="label-font" >限制重量</label>
+                    <input  v-model="form.sale.limitWeight" placeholder="請輸入" class="input" style="height:55px;"/>  
+                </div>
+                <div class="field_two">    
+                    <label class="label-font" >最後進場日期</label>
+                    <input  v-model="form.sale.toFactoryDate" placeholder="請輸入" class="input" style="height:55px;"/>  
+                </div>
+                <div class="field_two ">    
+                    <label class="label-font" >價錢</label>
+                    <input  v-model="form.sale.price" placeholder="請輸入" class="input" style="height:55px;"/>  
+                </div>
+            </form>
+        </div>
+        <div class="button_function center" style="margin-left:10px" >
+            <button @click.prevent="submit" class="submit">提交</button>
+        </div>
+    </div>
+</div>
+
 </template>
 
 <script>
+/* eslint-disable */
+import api from '../lib/'
+import _ from 'lodash'
+
 export default {
     name: 'Application',
     props: {
@@ -271,129 +179,148 @@ export default {
     },
     data() {
         return {
-            use_status:{
-                user:true,
-                company:false,
-                sale:false,
+            change: "mission",
+            rocketItems: null,
+            apiStatus: {
+                need: true,
+                mission: true,
+                sale: true,
             },
+            apply_status:false,
             form: {
-                applier:null,
-                phone: null,
-                porpose:null,
-                weight: null,
-                height: null,
-                inclination: null,
-                launchDate: null,
-                toFactoryDate:null,
-                email:null,
-                budget:null,
-                satellite_name:null,
+                need: {
+                    purpose:null,
+                    weight: null,
+                    height: null,
+                    inclination: null,
+                    launchDate: null,
+                    toFactoryDate:null,
+                    budget:null,
+                    satellite_name:null,
+                },
+                mission: {
+                    rocketName: null,
+                    height: null,
+                    inclination: null,
+                    totalWeight: null,
+                    launchDate:null,
+                },
+                sale: {
+                    missionId: null,
+                    price:null,
+                    toFactoryDate:null,
+                    limitWeight:null,
+                },
             },
-            form_company:{
-                rocketName: null,
-                height: null,
-                inclination: null,
-                totalWeight: null,
-                launchDate:null,
-            },
-            form_sale:{
-                rocketName:null,
-                price:null,
-                toFactoryDate:null,
-                limitWeight:null,
-               
-            },
-            valid:{
-                applier:null,
-                phone: null,
-                porpose:null,
-                weight: null,
-                height: null,
-                inclination: null,
-                launchDate: null,
-                toFactoryDate:null,
-                email:null,
-                budget:null,
-                satellite_name:null,
-            },
-            valid_company:{
-                rocketName:null,
-                height: null,
-                inclination: null,
-                tatalWeight: null,
-                launchDate:null,
-            },
-            valid_sale:{
-                limitWeight:null,
-                price:null,
-                IDe:null,
-                toFactoryDate:null,
-                rocketName:name,
-            },
-            
         }
-    },
-    methods:{
-        submit:function(){
-            if (this.form.applier==null){
-                this.valid.applier = true;
-            }
-            else this.valid.applier =false;
-            
-            if (this.form.phone==null){
-                this.valid.phone = true;
-            }
-            else this.valid.phone =false;
-            
-            if (this.form.email==null){
-                this.valid.email = true;
-            }
-            else this.valid.email =false;
-            
-            if (this.form.satellite_name==null){
-                this.valid.satellite_name = true;
-            }
-            else this.valid.satellite_name =false;
-            
-
-            if (this.form.weight==null){
-                this.valid.weight = true;
-            }
-            else this.valid.weight =false;
-
-            if (this.form.height==null){
-                this.valid.height = true;
-            }
-            else this.valid.height =false;
-
-            if (this.form.inclination==null){
-                this.valid.inclination = true;
-            }
-            else this.valid.inclination =false;
-
-            if (this.form.launchDate==null){
-                this.valid.launchDate = true;
-            }
-            else this.valid.launchDate =false;
-            
-            if (this.form.toFactoryDate==null){
-                this.valid.toFactoryDate = true;
-            }
-            else this.valid.toFactoryDate =false;
-            
-            if (this.form.budget==null){
-                this.valid.budget = true;
-            }
-            else this.valid.budget =false;
-            
-           
-        }
-       
-
     },
     created() {
-        console.log(this.userInfo)
-    }
+        api.getAllMission(this.getOnSuccess,this.onFailed)
+    },
+    methods:{
+        getOnSuccess: function(data) {
+            this.rocketItems = data;
+            this.apply_status=true;
+            const info = JSON.parse(localStorage.getItem('userInfo'));
+            this.rocketItems = _.filter(this.rocketItems,function(o) {
+                return (o.create_by === info.id)
+            })
+        },
+        onSuccess: function(data) {
+            this.$message({
+                type: 'success',
+                message: '成功',
+                center: true,
+            })
+        },
+        onFailed: function() {
+            this.$message({
+                type: 'error',
+                message: '失敗',
+                center: true,
+            });
+            this.apply_status=false;
+        },
+        submit: function(){
+            const info = JSON.parse(localStorage.getItem('userInfo'))
+            for(var key in this.apiStatus) {
+                this.apiStatus[key] = true;
+                for(var formKey in this.form[key]) {
+                    if(this.form[key][formKey] === null || this.form[key][formKey] === '') {
+                        this.apiStatus[key] = false;
+                    }
+                }
+            }
+            let payload = {}
+            if(this.userInfo.permission === 'user') {
+                if(this.apiStatus.need) {
+                    var data = this.form.need  
+                    payload = {
+                        request_by: info.id,
+                        satellite_name: data.satellite_name,
+                        weight_kg: parseInt(data.weight),
+                        purpose: data.purpose,
+                        eta_height_km: data.height,
+                        arrival_date: data.toFactoryDate,
+                        inclination: data.inclination,
+                        launch_day: data.launchDate,
+                        budget_billion: parseInt(data.budget),
+                        status:this.apply_status,
+                    }
+                    api.postNeed(payload,this.onSuccess,this.onFailed);
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: '欄位不得為空',
+                        center: true,   
+                    })
+                }  
+            } else if(this.userInfo.permission === 'company' && this.change === "mission") {
+                if(this.apiStatus.mission) {
+                    var data = this.form.mission
+                    payload = {
+                        create_by: info.id,
+                        launch_rocket: data.rocketName,
+                        target_height_km: data.height,
+                        launch_date: data.launchDate,
+                        target_inclination: data.inclination,
+                        status:this.apply_status,
+                        rocket_max_payload_weight: data.totalWeight,
+                    }
+                    api.postMission(payload,this.onSuccess,this.onFailed);
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: '欄位不得為空',
+                        center: true,   
+                    })
+                }  
+            } else if(this.userInfo.permission === 'company' && this.change === "sale") {
+                if(this.apiStatus.sale) {
+                    var data = this.form.sale
+                    payload = {
+                        order_id: null,
+                        mission_id: data.missionId,
+                        limit_weight: data.limitWeight,
+                        mission_arrival_deadline: data.toFactoryDate,
+                        seat_price:data.price,
+                        status:this.apply_status,
+                    }
+                    api.postMissionOrder(payload,this.onSuccess,this.onFailed)
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: '欄位不得為空',
+                        center: true,   
+                    })
+                }  
+            }
+        },
+        test: function(data) {
+            this.change = data;
+            api.getAllMission(this.getOnSuccess,this.onFailed)
+        },
+    },
 }
 </script>
 
@@ -409,7 +336,8 @@ height:700px;
 }
 .title {
   position:relative;
-  height:50px;
+  height: 70px;
+  width: 100%;
   color:white;
   font-size:30px;
   margin-bottom: 20px;
@@ -472,12 +400,12 @@ height:700px;
     color:#ffffff;
     border-radius: 4px;
     border: solid 1px #ffffff;
-    padding:10px;
-    margin-top:20px;
-    
+    height: 60px;
 }
 
 .label-font{
+  display: flex;
+  align-items: center;
   color:white;
   font-size:18px;
   margin:10px;
@@ -491,8 +419,7 @@ height:700px;
   
 }
 .button_function{
-  display:flex;
-  flex-direction :row;
+    width: 100%;
 }
 .submit{
     text-align: center;
@@ -517,8 +444,7 @@ height:700px;
 .valid_warn{
     color:red;
     font-size:14px;
-    margin-top:15px;
-    
+    margin-left: 15px;
  }
  .test{
      
@@ -528,6 +454,33 @@ height:700px;
 
  }
 
-
-
+select {
+    color: '#fff',
+}
+.missionSelector {
+    width: 50%;
+    height: 100%;
+    border-radius: 10px 0px 0px 0px;
+    border: 2px solid #fff;
+    font-size: 30px;
+}
+.saleSelector {
+    width: 50%;
+    height: 100%;
+    border-radius: 0px 10px 0px 0px;
+    border: 2px solid #fff;
+    border-left: transparent;
+    font-size: 30px;
+}
+.selected {
+    background: rgb(255,255,255);
+    color: #000;
+}
+.noSelected {
+    background: rgba(255,255,255,0);
+    color: #fff;
+}
+.noSelected:hover {
+    background: rgba(255,255,255,0.3);
+}
 </style>

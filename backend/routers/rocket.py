@@ -15,12 +15,12 @@ def getAllRockets():
         return warpResponse(None, code)
 
 
-@rocket.route("/", methods=['POST'])
+@rocket.route("/findOne", methods=['POST'])
 def getOneRocket():
     r = request.get_json()
     resp, code = rockets.FindOne(r)
     if resp is not None:
-        return warpResponse(resp)
+        return warpResponse(resp, code)
     else:
         return warpResponse(None, code)
 
@@ -35,11 +35,17 @@ def createRocket():
         return warpResponse(None, code)
 
 
-@rocket.route("/<name>", methods=['POST'])
-def patchRocket(name):
+@rocket.route("/patch", methods=['POST'])
+def patchRocket():
     r = request.get_json()
-    code = rockets.Patch(name, r)
-    if code is not None:
-        return warpResponse(None, code)
+    resp, code = rockets.Patch(r)
+    if resp is not None:
+        return warpResponse(resp, code)
     else:
         return warpResponse(None, code)
+
+@rocket.route("/delete", methods=['POST'])
+def deleteRocket():
+    r = request.get_json()
+    code = rockets.Delete(r['id'])
+    return warpResponse(None, code)

@@ -15,7 +15,7 @@ def getAllLocations():
         return warpResponse(None, code)
 
 
-@location.route("/", methods=['POST'])
+@location.route("/findOne", methods=['POST'])
 def getOneLocation():
     r = request.get_json()
     resp, code = locations.FindOne(r)

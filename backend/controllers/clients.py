@@ -33,6 +33,7 @@ def FindAll():
         dataDict = []
         for data in query:
             data.__dict__.pop("_sa_instance_state")
+            data.__dict__.pop("passwd")
             dataDict.append(data.__dict__)
         return dataDict, 200
     except Exception as e:
@@ -40,14 +41,14 @@ def FindAll():
         return None, 404
 
 
-def FindOne(username):
+def FindOne(ids):
     try:
-        query = Clients.query.filter_by(username=username)
-        if query.one_or_none() is not None:
-            """q = query.one_or_none()
-            q.__dict__.pop("_sa_instance_state")
-            q.__dict__.pop("passwd")"""
-            return None, 200
+        query = Clients.query.filter_by(id=ids).one_or_none()
+        if query is not None:
+            q = query.__dict__
+            q.pop("_sa_instance_state")
+            q.pop("passwd")
+            return q, 200
         else:
             return None, 404
     except InvalidRequestError:
@@ -66,8 +67,13 @@ def Login(content):
                 q.__dict__.pop("passwd")
                 q.__dict__.pop("_sa_instance_state")
                 if orders is not None:
+                    tmp = []
+                    for num in range(len(orders)):
+                        tmpDict = orders[num].__dict__
+                        tmpDict.pop("_sa_instance_state")
+                        tmp.append(tmpDict)
                     resp = q.__dict__
-                    resp["orders"] = orders
+                    resp["orders"] = tmp
                 else:
                     resp = {**q.__dict__, "orders": "null"}
                 

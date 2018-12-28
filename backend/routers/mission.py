@@ -15,10 +15,10 @@ def getAllMissions():
         return warpResponse(None, code)
 
 
-@mission.route("/", methods=['POST'])
+@mission.route("/findOne", methods=['POST'])
 def getOneMission():
     r = request.get_json()
-    resp, code = missions.FindOne(r)
+    resp, code = missions.FindOne(r['id'])
     if resp is not None:
         return warpResponse(resp)
     else:
