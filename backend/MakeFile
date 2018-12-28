@@ -11,3 +11,6 @@ init:
 
 clean-pyc:
 	find . -name "*.pyc" -exec rm -f {} \;
+
+docker:
+	docker run -p 5000:5000 backend

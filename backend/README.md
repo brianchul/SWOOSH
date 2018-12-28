@@ -19,8 +19,8 @@ You can use docker to install backend service or just install on your computer
 Build with docker
 
 ```sh
-docker build .
-docker run -d -p 5000:5000 image_id
+docker build -t backend .
+docker run -p 5000:5000 backend
 ```
 
 Download and install Python3
