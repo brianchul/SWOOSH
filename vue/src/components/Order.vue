@@ -37,7 +37,7 @@
         </el-table-column>
         <el-table-column>
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="編輯" placement="right">
+            <el-tooltip class="item" effect="dark" content="編輯" placement="top">
               <el-button
                 icon="el-icon-edit"
                 type="info"
@@ -45,6 +45,14 @@
                 @click="showNeedOverlay(scope.$index)"
               ></el-button>
             </el-tooltip>
+            <!-- <el-tooltip class="item" effect="dark" content="刪除" placement="top">
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                circle
+                @click="deleteNeed(scope.$index)"
+              ></el-button>
+            </el-tooltip> -->
           </template>
         </el-table-column>
       </el-table>
@@ -128,7 +136,7 @@
                 <span>{{ props.row.saleList }}</span>
               </el-form-item>
             </el-form>
-          </template>  -->
+          </template>-->
         </el-table-column>
         <el-table-column label="火箭ID" prop="id"></el-table-column>
         <el-table-column label="火箭名稱" prop="launch_rocket"></el-table-column>
@@ -147,6 +155,15 @@
         <el-table-column>
           <template slot-scope="scope">
             <el-button icon="el-icon-edit" type="info" circle @click="showOverlay(scope.$index)"></el-button>
+            
+            <el-tooltip class="item" effect="dark" content="刪除" placement="top">
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                circle
+                @click="deleteRocket(scope.$index)"
+              ></el-button>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -181,6 +198,14 @@
               circle
               @click="showSaleOverlay(scope.$index)"
             ></el-button>
+            <el-tooltip class="item" effect="dark" content="刪除" placement="top">
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                circle
+                @click="deleteSale(scope.$index)"
+              ></el-button>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -219,9 +244,9 @@
               placeholder="請選擇日期"
             ></el-date-picker>
           </el-form-item>
-           <!-- <el-form-item label="已配對之衛星ID：">
+          <!-- <el-form-item label="已配對之衛星ID：">
             <el-input v-model="selectedlist.pairOrderId" autocomplete="off" clearable></el-input>
-          </el-form-item>  -->
+          </el-form-item>-->
           <el-form-item label="狀態：">
             <el-switch v-model="selectedlist.status" active-text="開放中" inactive-text="關閉"></el-switch>
           </el-form-item>
@@ -285,6 +310,7 @@ export default {
       selectedlist: {},
       selectedSalelist: {},
       selectedNeedlist: {},
+      deletelist: {},
       RisActive: false,
       SisActive: false,
       NisActive: false,
@@ -301,12 +327,12 @@ export default {
       api.getAllMission(this.selectMSuccess, this.getOnFailed);
       api.getAllMissionOrder(this.selectMOSuccess, this.getOnFailed);
       // const missoninfo = JSON.parse(localStorage.getItem("missionInfo"));
-       const missonOrderinfo = JSON.parse(
-         localStorage.getItem("missionOrderInfo")
-       );
+      //const missonOrderinfo = JSON.parse(
+        //localStorage.getItem("missionOrderInfo")
+      //);
       //console.log(missoninfo);
       // this.setSrocket(missoninfo);
-       this.setSsale(missonOrderinfo);
+      //this.setSsale(missonOrderinfo);
     }
   },
   methods: {
@@ -371,7 +397,11 @@ export default {
             element.status = false;
           }
           if (element.order_id != null) {
-            api.getClientById(element.order_id,this.getClientByIdSuccess, this.getOnFailed);
+            api.getClientById(
+              element.order_id,
+              this.getClientByIdSuccess,
+              this.getOnFailed
+            );
             const clientInfo = JSON.parse(localStorage.getItem("clientInfo"));
             element.clientName = clientInfo.name;
           }
@@ -437,9 +467,43 @@ export default {
       api.patchNeed(arr, this.patchOnSuccess, this.patchOnFailed);
       this.changeNeedOverlay();
     },
+    deleteNeed(index) {
+      this.selected = index;
+      this.deletelist = JSON.parse(
+        JSON.stringify(this.showneedData[index])
+      );
+      this.showneedData.splice(index,1);
+      api.deleteNeedById(this.deletelist, this.deleteOnSuccess, this.deleteOnFailed);
+    },
+    deleteSale(index) {
+      this.selected = index;
+      this.deletelist = JSON.parse(
+        JSON.stringify(this.showsaleData[index])
+      );
+      this.showsaleData.splice(index,1);
+      api.deleteMissionOrderById(this.deletelist, this.deleteOnSuccess, this.deleteOnFailed);
+    },
+    deleteRocket(index) {
+      this.selected = index;
+      this.deletelist = JSON.parse(
+        JSON.stringify(this.showrocketData[index])
+      );
+      this.showrocketData.splice(index,1);
+      api.deleteMissionById(this.deletelist, this.deleteOnSuccess, this.deleteOnFailed);
+    },
+
+
+
     patchOnSuccess: function() {
       this.$message({
         message: "儲存成功！",
+        type: "success",
+        center: true
+      });
+    },
+    deleteOnSuccess: function() {
+      this.$message({
+        message: "刪除成功！",
         type: "success",
         center: true
       });
@@ -448,6 +512,13 @@ export default {
       this.$message({
         type: "error",
         message: "儲存失敗，請重新確認",
+        center: true
+      });
+    },
+    deleteOnFailed: function() {
+      this.$message({
+        type: "error",
+        message: "刪除失敗，請重新確認",
         center: true
       });
     },
@@ -464,10 +535,10 @@ export default {
       this.setSrocket(this.rocketData);
     },
     selectMOSuccess: function(data) {
-      localStorage.setItem("missionOrderInfo", JSON.stringify(data));
-      // this.saleData = JSON.parse(JSON.stringify(data));
+      //localStorage.setItem("missionOrderInfo", JSON.stringify(data));
+       this.saleData = JSON.parse(JSON.stringify(data));
       // console.log("saleData");
-      // this.setSsale(this.saleData);
+       this.setSsale(this.saleData);
     },
     selectNSuccess: function(data) {
       // console.log("資料庫回傳");
