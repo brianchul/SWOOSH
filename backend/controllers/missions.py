@@ -148,15 +148,15 @@ def Delete(id):
     try:
         toDel = Missions.query.filter_by(id=id).first()
         if toDel is not None:
-            delRelate = MissionClientOrderRelate.query.filter_by(mission_id=id)
-            if delRelate.one_or_none() is not None:
+            delRelate = MissionClientOrderRelate.query.filter_by(mission_id=id).all()
+            if delRelate:
                 for data in delRelate.all():
                     db_session.delete(data)
             db_session.commit()
 
-            delRelate = MissionOrders.query.filter_by(mission_id=id)
-            if delRelate.one_or_none() is not None:
-                for data in delRelate.all():
+            delRelate = MissionOrders.query.filter_by(mission_id=id).all()
+            if delRelate:
+                for data in delRelate:
                     db_session.delete(data)
             db_session.commit()
             db_session.delete(toDel)
