@@ -101,13 +101,11 @@ export default {
   methods: {
     changeWindow: function(index) {
       if(!this.userInfo.isLoggedIn && index !== 'AboutUs' && index !== 'History') {
-        localStorage.setItem('alert',JSON.stringify({
-          hook: true,
-          status: 'fail',
-          title: '操作失敗',
+        this.$message({
+          type: 'error',
           message: '請先登入',
-        }))
-        this.$emit('setAlert')
+          center: true,
+        })
       } else {
         this.$emit('closeWindow');
         this.selectedMenuItem = index;

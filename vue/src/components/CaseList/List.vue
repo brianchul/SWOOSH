@@ -2,7 +2,7 @@
     <div class='listWrapper'>
         <div class='listTitle'>
             <img class='titleIcon' src='../../assets/white.png'/>
-            {{ listTitle }}
+            {{ (listName === 'need') ? '需求清單' : '販售清單' }}
         </div>
         <div class='list'>
             <div class='row'>
@@ -10,14 +10,22 @@
                     {{ value }}
                 </div>
             </div>
-            <div class='itemWrapper'>
+            <div v-if='payload.length === 0' class='noData center'>目前無資料</div>
+            <div v-else-if='modal' class='modal center'>
+                <div class='close cross' @click='modal = false'></div>
+                <div v-for='(value,key) in contactTags' :key='key'> {{value}}：{{itemInfo[key]}}</div>
+                <div v-if='listName === "sale"'>
+                    <div v-for='(value,key) in detailTags' :key='key'> {{value}}：{{detail[key]}}</div>
+                </div>
+            </div>
+            <div v-else class='itemWrapper'>
                 <div v-for='(item,index) in payload' :key='index'
                 class='row' :class='(index%2 === 0) ? "even" : "" '>
-                    <div v-for='(value,key) in item' :key='index+"-"+key' class='item'>
-                        {{ value }}
+                    <div v-for='(value,key) in tags' :key='index+"-"+key' class='item'>
+                        {{ item[key] }}
                     </div>
-                    <div class='buttonWrapper center'>
-                        {{ buttonText }}
+                    <div class='buttonWrapper center' @click='getContact(item)'>
+                        {{ (listName === 'need') ? '聯絡' : '訂購' }}
                     </div>
                 </div>
             </div>
@@ -27,7 +35,7 @@
 
 <script>
 import _ from 'lodash'
-
+import api from '../../lib/'
 export default {
     name: 'List',
     props: {
@@ -37,27 +45,61 @@ export default {
     data() {
         const { listName } = this
         return {
-            listTitle: (listName === 'need') ? '需求清單' : '販售清單',
-            buttonText: (listName === 'need') ? '聯絡' : '訂購',
+            modal: false,
             tags: (listName === 'need') ? {
-                name: '名稱',
-                weight: '重量',
-                height: '高度',
-                inclination: '傾角',
-                launchDate: '發射日期',
+                satellite_name: '衛星名稱',
+                weight_kg: '重量(kg)',
+                eta_height_km: '高度',
+                inclination: '傾角(度)',
+                arrival_date: '發射日期',
             } : {
-                launchDate: '發射日期',
-                limitWeight: '限制重量',
-                height: '高度',
-                inclination: '傾角',
-                price: '價格',
+                mission_arrival_deadline: '發射日期',
+                limit_weight: '限制重量(kg)',
+                seat_price: '價格(百萬)',
             },
+            contactTags: {
+                phone: '電話',
+                email: '信箱',
+                name: '聯絡',
+            },
+            detailTags : {
+                launch_rocket: '名稱',
+                rocket_max_payload_weight: '最大載重',
+                target_height_km: '高度',
+                target_inclination: '傾角',
+            },
+            itemInfo: null,
+            detail: null,
         }
     },
     methods: {
-        
-    },
-    created() {
+        getContact: function(payload) {
+            switch(this.listName) {
+                case 'need':
+                    api.getClientById(payload.request_by,this.getContactOnSuccess,this.onFailed);
+                    break;
+                case 'sale':
+                    api.getMission(payload.mission_id,this.getDetailOnSuccess,this.onFailed);
+                    break;
+            }
+        },
+        getDetailOnSuccess: function(data) {
+            this.detail = data;
+            api.getClientById(this.detail.create_by,this.getContactOnSuccess,this.onFailed);
+        },
+        getContactOnSuccess: function(data) {
+            this.itemInfo = data;
+            if(this.itemInfo) {
+                this.modal = true;
+            }
+        },
+        onFailed: function() {
+            this.$message({
+                type: 'error',
+                message: 'data not found',
+                center: true,
+            })
+        }
     },
 }
 </script>
@@ -93,7 +135,7 @@ export default {
     border-bottom: 1px solid #fff;
 }
 .list .row:hover .buttonWrapper {
-    right: 20px;
+    right: 0px;
 }
 .list .even {
     background-color: rgba(0,0,0,0.3);
@@ -117,15 +159,14 @@ export default {
 }
 .buttonWrapper {
     position: absolute;
-    right: -100px;
-    width: 80px;
-    height: 30px;
-    border: 2px solid #fff;
-    border-radius: 15px;
+    right: -150px;
+    width: 100px;
+    height: 100%;
+    border-left: 1px solid #fff;
     transition: right 1s;
 }
 .buttonWrapper:hover {
-    border: 2px solid #000;
+    background-color: rgba(255,255,255,0.3);
 }
 .buttonWrapper:hover .button{
     background-color: #000;
@@ -149,5 +190,27 @@ export default {
 .item .up {
     border-width: 0px 5px 10px 5px;
     border-color: transparent transparent #fff transparent;
+}
+.noData {
+    width: 100%;
+    height: 100%;
+}
+.modal {
+    flex-direction: column;
+    position: relative;
+    background-color: rgba(0,0,0,0.3);
+    width: 100%;
+    height: 255px;
+    transition: opacity .5s;
+}
+.createModal {
+    opacity: 1;
+}
+.cross {
+    top: 20px;
+  right: 20px;
+}
+.itemInfoRow {
+    display: flex;
 }
 </style>

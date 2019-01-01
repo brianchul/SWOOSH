@@ -86,8 +86,8 @@
 
     <div v-else-if='userInfo.permission="company"'>
         <div class="title font-stytle center">
-            <button :class='(change==="mission") ? "selected" : "noSelected" ' class='missionSelector' @click.prevent="change = 'mission'">任務</button>
-            <button :class='(change==="sale") ? "selected" : "noSelected" 'class='saleSelector' @click.prevent="change = 'sale'">機位</button>
+            <div :class='(change==="mission") ? "selected" : "noSelected" ' class='missionSelector center' @click.prevent="test('mission')">任務</div>
+            <div :class='(change==="sale") ? "selected" : "noSelected" ' class='saleSelector center' @click.prevent="test('sale')">機位</div>
         </div>
         <div v-if='change === "mission"'>
             <form class="fields ">
@@ -141,7 +141,7 @@
                 <div class="field_two">
                     <label class="label-font">發射計畫名稱</label>
                     <select v-model="form.sale.missionId" class="input">
-                        <option v-for='item in rocketItems' :value='item.id'>{{item.launch_rocket}}</option>
+                        <option v-for='item in rocketItems' :value='item.id' :key='item.id'>{{item.launch_rocket}}</option>
                     </select>
 
                 </div>
@@ -168,6 +168,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import api from '../lib/'
 import _ from 'lodash'
 
@@ -226,7 +227,6 @@ export default {
             })
         },
         onSuccess: function(data) {
-            console.log(data)
             this.$message({
                 type: 'success',
                 message: '成功',
@@ -315,6 +315,10 @@ export default {
                     })
                 }  
             }
+        },
+        test: function(data) {
+            this.change = data;
+            api.getAllMission(this.getOnSuccess,this.onFailed)
         },
     },
 }

@@ -43,12 +43,12 @@ def FindAll():
 
 def FindOne(ids):
     try:
-        query = Clients.query.filter_by(id=ids)
-        if query.one_or_none() is not None:
-            q = query.one_or_none()
-            q.__dict__.pop("_sa_instance_state")
-            q.__dict__.pop("passwd")
-            return q.__dict__, 200
+        query = Clients.query.filter_by(id=ids).one_or_none()
+        if query is not None:
+            q = query.__dict__
+            q.pop("_sa_instance_state")
+            q.pop("passwd")
+            return q, 200
         else:
             return None, 404
     except InvalidRequestError:
