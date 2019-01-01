@@ -1,6 +1,7 @@
 from sqlalchemy.exc import InvalidRequestError, IntegrityError
 from config.DBindex import db_session
 from models.order import ClientOrders
+from models.mission import MissionClientOrderRelate
 from pkg.logger import get_logger as log
 from datetime import datetime
 from pkg.checkDictMatch import checkDictKeyMatchArray
@@ -98,11 +99,17 @@ def Delete(id):
     try:
         toDel = ClientOrders.query.filter_by(id=id).first()
         if toDel is not None:
+            delRelate = MissionClientOrderRelate.query.filter_by(clientOrder_id=id)
+            if delRelate.one_or_none() is not None:
+                for data in delRelate.all():
+                    db_session.delete(data)
+            db_session.commit()
+            
             db_session.delete(toDel)
             db_session.commit()
             return 200
         else:
             return 400
     except InvalidRequestError:
-        log().error("Unable to delete data")
+        log().error("Unable to delete clientOrder data")
         return 400

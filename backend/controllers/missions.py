@@ -1,7 +1,7 @@
 from sqlalchemy.exc import InvalidRequestError, IntegrityError
 from config.DBindex import db_session
 from models.mission import Missions, MissionClientOrderRelate
-from models.order import ClientOrders
+from models.order import ClientOrders, MissionOrders
 from pkg.logger import get_logger as log
 from pkg.checkDictMatch import checkDictKeyMatchArray
 from datetime import datetime
@@ -148,11 +148,17 @@ def Delete(id):
     try:
         toDel = Missions.query.filter_by(id=id).first()
         if toDel is not None:
-            delRelate = MissionClientOrderRelate.query.filter_by(mission_id=id).all()
-            for data in delRelate:
-                db_session.delete(data)
+            delRelate = MissionClientOrderRelate.query.filter_by(mission_id=id)
+            if delRelate.one_or_none() is not None:
+                for data in delRelate.all():
+                    db_session.delete(data)
             db_session.commit()
-            
+
+            delRelate = MissionOrders.query.filter_by(mission_id=id)
+            if delRelate.one_or_none() is not None:
+                for data in delRelate.all():
+                    db_session.delete(data)
+            db_session.commit()
             db_session.delete(toDel)
             db_session.commit()
             return 200
