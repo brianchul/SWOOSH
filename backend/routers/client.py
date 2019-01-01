@@ -32,7 +32,6 @@ def registerClient():
 @client.route("/login", methods=['POST'])
 def loginClient():
     r = request.get_json()
-    log().debug(str(r))
     resp, code = clients.Login(r)
     return warpResponse(resp, code)
 
