@@ -117,3 +117,32 @@ export function patchNeed(payload,onSuccess,onFailed) {
         console.log(e);
     }
 }
+
+export function deleteNeedById(payload,onSuccess,onFailed) {
+    let uri = `${API_HOST}/clientOrder/delete`;
+    try {
+        const res = request({
+            uri,
+            method: 'POST',
+            data: {
+                id: parseInt(payload.id),
+            },
+            auth:false,
+        });
+        res.then(function(response) {
+            let data = response.data.data
+            console.log(data)
+            switch(response.data.code){
+                case 200:
+                    onSuccess(data);
+                    break;
+                case 400:
+                    onFailed();
+                    break;
+            }
+        })
+    } catch (e) {
+        console.log(e);
+    }
+}
+
