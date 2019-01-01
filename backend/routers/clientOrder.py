@@ -29,7 +29,7 @@ def getOneClient():
 @clientOrder.route("/add", methods=['POST'])
 def createClientOrder():
     r = request.get_json()
-    if validate(r['arrival_date']) and validate(r['launch_day']):
+    if 'arrival_date' in r and 'launch_day' in r and validate(r['arrival_date']) and validate(r['launch_day']):
         resp, code = clientOrders.Create(r)
         if resp is not None:
             return warpResponse(resp, code)
