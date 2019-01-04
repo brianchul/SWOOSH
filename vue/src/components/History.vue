@@ -4,8 +4,9 @@
         <div class= 'separate'></div>
         <div class= 'wrapper'>
             <div class= 'flex_row'>
+                <img class='titleImg' src='../assets/white.png'/>
                 <div class= 'subtitle'>Select Year : </div>
-                <input class='input' v-model="year"/>
+                <input class='input' v-model="year" @change="hello"/>
                 <div class= "dropdown">
                     <div class= "dropbtn center"  @click="openContent=true">
                         <div class='triangle'></div>
@@ -17,10 +18,34 @@
             </div>
         </div>
         <div class= "wrapper">
-            <el-table class="table" :data="filterJson" stripe style="width: 80%" height="315" >
-                <el-table-column :span="4" prop="launch_day" width= "250" label="Launch Day" align= "center"></el-table-column>
-                <el-table-column prop="rocket_name" label="Name" width= "150" align= "left"></el-table-column>
-                <el-table-column prop="launch_location" label="Launch Location" align= "left"></el-table-column>
+            <el-table 
+                class="table" 
+                :data="filterJson" 
+                :default-sort = "{prop: 'launch_day', order: 'descending'}" 
+                style="width: 80%" 
+                height="450" >
+                <el-table-column type="expand">
+                    <template slot-scope="props">
+                        <p>Purpose : {{ props.row.mission_discription }}</p>
+                    </template>
+                </el-table-column>
+                <el-table-column 
+                    :span="4"
+                    prop="launch_day" 
+                    width= "250" 
+                    label="Launch Day"
+                    align= "center"
+                    sortable></el-table-column>
+                <el-table-column 
+                    prop="rocket_name" 
+                    label="Name" 
+                    width= "150" 
+                    align= "left"></el-table-column>
+                <el-table-column 
+                    prop="launch_location"
+                    label="Launch Location" 
+                    align= "left"
+                    ></el-table-column>
             </el-table>
         </div>
     </div>
@@ -38,19 +63,30 @@ export default {
             openContent: false,
             year: 2018,
             initJson: json,
-            filterJson: json,
+            filterJson: null,
+
         }
+    },
+    created() {
+        this.initJson = _.orderBy(this.initJson, ['launch_day'], ['asc']);
+        this.filterJson = this.initJson;
     },
     methods: {
         itemClick: function(n) {
             this.openContent = false;
             this.year = n+2003;
             var targetYear = this.year;
+
+            this.filterJson = _.filter(this.initJson,function(payload) {
+                return (payload.launch_day.match(/.{1,4}/g)[0] === targetYear.toString());
+            });
+        },
+        hello: function(){
+            var targetYear = this.year;
             this.filterJson = _.filter(this.initJson,function(payload) {
                 return (payload.launch_day.match(/.{1,4}/g)[0] === targetYear.toString())
             });
         },
-
     },
     
 }
@@ -59,7 +95,7 @@ export default {
 <style scoped>
 .title {
     color: #fff;
-    font-size: 30px;
+    font-size: 40px;
     font-family: sans-serif;
     border-bottom: 2px solid #fff;
     padding-bottom: 10px;
@@ -68,6 +104,9 @@ export default {
     color: #fff;
     font-size: 20px;
     padding: 10px;
+}
+.titleImg{
+    height: 40px;
 }
 .year {
     color: #000;

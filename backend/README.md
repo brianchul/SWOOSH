@@ -14,6 +14,15 @@ Mysql
 
 ## Installation
 
+You can use docker to install backend service or just install on your computer
+
+Build with docker
+
+```sh
+docker build -t backend .
+docker run -p 5000:5000 backend
+```
+
 Download and install Python3
 
 cd to your project directory

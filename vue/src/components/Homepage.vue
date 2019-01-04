@@ -37,11 +37,10 @@
           </div>
         </div>
         <transition name='boardTransition'
-        @before-enter='contentRoot = selectedMenuItem'
-        @after-enter='boardHeightHandler = true'
-        @before-leave='boardHeightHandler = false'>
-          <div v-show='boardView' class='board center'
-          :class='(boardHeightHandler) ? "boardAfter" : ""'>
+        @before-enter='boardBeforeEnter'
+        @after-enter='boardAfterEnter'
+        @before-leave='boardBeforeLeave'>
+          <div v-if='boardView' class='board center'>
             <div class='close cross' @click='closeBoard'></div>
             <div class='componentWrapper'>
               <component :is='contentRoot'
@@ -91,7 +90,6 @@ export default {
       selectedMenuItem: 'AboutUs',
       contentRoot: 'AboutUs',
       boardView: false,
-      boardHeightHandler: false,
       userInfo: {
         isLoggedIn: false,
         userId: null,
@@ -103,13 +101,11 @@ export default {
   methods: {
     changeWindow: function(index) {
       if(!this.userInfo.isLoggedIn && index !== 'AboutUs' && index !== 'History') {
-        localStorage.setItem('alert',JSON.stringify({
-          hook: true,
-          status: 'fail',
-          title: '操作失敗',
+        this.$message({
+          type: 'error',
           message: '請先登入',
-        }))
-        this.$emit('setAlert')
+          center: true,
+        })
       } else {
         this.$emit('closeWindow');
         this.selectedMenuItem = index;
@@ -140,6 +136,17 @@ export default {
           permission: (info.is_launch_company) ? "company" : "user",
         }
       }
+    },
+    boardBeforeEnter: function(el) {
+      this.contentRoot = this.selectedMenuItem;
+    },
+    boardAfterEnter: function(el) {
+      el.style.height = '80vh';
+      el.style.marginBottom = '30px';
+    },
+    boardBeforeLeave: function(el) {
+      el.style.height = '0px';
+      el.style.marginBottom = '0px';
     },
   },
   created() {

@@ -1,6 +1,7 @@
 from flask import request, Blueprint
 from controllers import clientOrders
 from pkg.warpResponse import warpResponse
+from pkg.datetimeValidator import validate
 
 
 clientOrder = Blueprint('clientOrder', __name__)
@@ -15,12 +16,12 @@ def getAllClients():
         return warpResponse(None, code)
 
 
-@clientOrder.route("/", methods=['POST'])
+@clientOrder.route("/findOne", methods=['POST'])
 def getOneClient():
     r = request.get_json()
-    resp, code = clientOrders.FindOne(r)
+    resp, code = clientOrders.FindOne(r['id'])
     if resp is not None:
-        return warpResponse(resp)
+        return warpResponse(resp, code)
     else:
         return warpResponse(None, code)
 
@@ -28,16 +29,21 @@ def getOneClient():
 @clientOrder.route("/add", methods=['POST'])
 def createClientOrder():
     r = request.get_json()
-    resp, code = clientOrders.Create(r)
-    if resp is not None:
-        return warpResponse(resp, code)
+    if 'arrival_date' in r and 'launch_day' in r and validate(r['arrival_date']) and validate(r['launch_day']):
+        resp, code = clientOrders.Create(r)
+        if resp is not None:
+            return warpResponse(resp, code)
+        else:
+            return warpResponse(None, code)
     else:
-        return warpResponse(None, code)
+        return warpResponse("Datetime error", 400)
 
 
 @clientOrder.route("/patch", methods=['POST'])
 def patchClientOrder():
     r = request.get_json()
+    if 'arrival_date' in r and not validate(r['arrival_date']) or 'launch_day' in r and not validate(r['launch_day']):
+        return warpResponse("Datetime error", 400)
     resp, code = clientOrders.Patch(r)
     if resp is not None:
         return warpResponse(resp, code)
