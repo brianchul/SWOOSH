@@ -7,10 +7,10 @@ from pkg.logger import get_logger as log
 client = Blueprint('client', __name__)
 
 
-@client.route("/", methods=['GET'])
+"""@client.route("/", methods=['GET'])
 def getAllClients():
     resp, code = clients.FindAll()
-    return warpResponse(resp, code)
+    return warpResponse(resp, code)"""
 
 
 @client.route("/findOne", methods=['POST'])

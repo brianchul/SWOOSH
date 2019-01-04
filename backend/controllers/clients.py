@@ -37,7 +37,7 @@ def FindAll():
             dataDict.append(data.__dict__)
         return dataDict, 200
     except Exception as e:
-        log().error(e.message)
+        log().error("error in findall")
         return None, 404
 
 

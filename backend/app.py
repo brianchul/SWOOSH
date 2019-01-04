@@ -14,11 +14,11 @@ app = Flask(__name__)
 CORS(app)
 app.register_blueprint(mission, url_prefix="/mission")
 app.register_blueprint(location, url_prefix="/location")
-app.register_blueprint(rocket, url_prefix="/rocket")
+#app.register_blueprint(rocket, url_prefix="/rocket")
 app.register_blueprint(client, url_prefix="/client")
 app.register_blueprint(clientOrder, url_prefix="/clientOrder")
 app.register_blueprint(missionOrder, url_prefix="/missionOrder")
-app.register_blueprint(timeline, url_prefix="/timeline")
+# app.register_blueprint(timeline, url_prefix="/timeline")
 
 
 @app.errorhandler(404)
