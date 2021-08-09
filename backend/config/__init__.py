@@ -1,1 +1,1 @@
-db = "mysql+pymysql://root:ASd552361802@localhost:3306/testing_db"
+db = "mysql+pymysql://root:pass@localhost:3306/testing_db"
